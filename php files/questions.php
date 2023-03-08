@@ -41,7 +41,25 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
  $allQUestions_new =mysqli_num_rows($selectQuestion_runnew_second);
 
 
+ $key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
 
+ //ENCRYPT FUNCTION
+ function encryptthis($data, $key) {
+     $encryption_key = base64_decode($key);
+     $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+     $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+     return base64_encode($encrypted . '::' . $iv);
+     }
+     
+     //DECRYPT FUNCTION
+     function decryptthis($data, $key) {
+     $encryption_key = base64_decode($key);
+     list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
+     return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+     }
+ 
+
+     
 
 ?>
 
@@ -183,7 +201,7 @@ $selectoptions_run_jump = mysqli_query($conn, $selectoptions_jump);
 
 <!-- jumping option question -->
 <div class="container outerdiv" style="width: 650px; margin-top: 15px; position: relative;">
-<b><p class="whatisquestion" style="margin: 10px;"><?php echo $questioNumberjumping.') ' . $namejumping ;
+<b><p class="whatisquestion" style="margin: 10px;"><?php echo $questioNumberjumping.') ' . decryptthis($namejumping,$key) ;
 ?></p></b>
 <?php 
 while($datanewneww = mysqli_fetch_assoc($selectoptions_run_jump))
@@ -192,7 +210,7 @@ while($datanewneww = mysqli_fetch_assoc($selectoptions_run_jump))
     <div class="questionHolder">
         
 <input type="radio" name="question"  <?php if ($datanewneww['studentGivenAn'] == 1) {
-            echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $datanewneww['optionID'];?>"  style="cursor: pointer;"> <p class="optionText"> <?php echo $datanewneww['options']; ?></p>  
+            echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $datanewneww['optionID'];?>"  style="cursor: pointer;"> <p class="optionText"> <?php echo decryptthis($datanewneww['options'],$key); ?></p>  
 </div>
     <?php
 }
@@ -297,7 +315,7 @@ if(isset($_GET['number']))
 
 
 <div class="container outerdiv" style="width: 650px; margin-top: 15px; position: relative;">
-<b><p class="whatisquestion" style="margin: 10px;"><?php echo $questioNumber.') ' . $name ;
+<b><p class="whatisquestion" style="margin: 10px;"><?php echo $questioNumber.') ' . decryptthis($name,$key) ;
 ?></p></b>
 <?php 
 while($datanew = mysqli_fetch_assoc($selectoptions_run))
@@ -306,7 +324,7 @@ while($datanew = mysqli_fetch_assoc($selectoptions_run))
     <div class="questionHolder">
         
 <input type="radio" name="question"  <?php if ($datanew['studentGivenAn'] == 1) {
-            echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $datanew['optionID'];?>"  style="cursor: pointer;"> <p class="optionText"> <?php echo $datanew['options']; ?></p>  
+            echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $datanew['optionID'];?>"  style="cursor: pointer;"> <p class="optionText"> <?php echo decryptthis($datanew['options'],$key); ?></p>  
 </div>
     <?php
 }

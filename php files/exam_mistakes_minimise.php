@@ -14,10 +14,32 @@ if(!isset($_SESSION['studentID'])){
    $examID = $_SESSION['EXAM_PAPER_ID'];
 }
   $newdata = $_POST['thewidownWidth'];
-if($newdata <= 1000){
 
+
+ 
+ 
+ 
+if($newdata <= 1000){
+  $selectNumberMistakes = "SELECT * FROM detectexam WHERE examid='$examID' AND studentID='$studentid'";
+  $selectNumberMistakes_run = mysqli_query($conn, $selectNumberMistakes);
+  
+  if (mysqli_num_rows($selectNumberMistakes_run) == 0){
     $insertmistakes = "INSERT INTO detectexam(studentID,examid,subjectid,batchid) values('{$studentid}','{$examID}','{$subjectID}','{$studentbatch}')";
     $insertmistakes_run = mysqli_query($conn, $insertmistakes);
+  }else{
+    $selectNumberMistakesss = "SELECT * FROM detectexam WHERE examid='$examID' AND studentID='$studentid'";
+    $selectNumberMistakesss_run = mysqli_query($conn, $selectNumberMistakes);
+    $getdata = mysqli_fetch_assoc($selectNumberMistakesss_run);
+  }
+
+
+  $num= $getdata['mistakes']+1;
+
+  $updateMistakes = "UPDATE detectexam SET mistakes='$num'  WHERE examid='{$examID}' AND studentID='{$studentid}' ";
+  $insertmistakes_run = mysqli_query($conn, $updateMistakes);
+
+ 
+ 
 
     if($insertmistakes_run ==true){
         echo "<small class='hswotheerror'>Don't try to minimize the tab</small>";

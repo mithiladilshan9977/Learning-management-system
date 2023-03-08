@@ -23,6 +23,30 @@ if(isset($_SESSION['EXAM_PAPER_ID'])){
 }
 
 
+
+
+
+
+$key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+
+//ENCRYPT FUNCTION
+function encryptthis($data, $key) {
+    $encryption_key = base64_decode($key);
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    return base64_encode($encrypted . '::' . $iv);
+    }
+    
+    //DECRYPT FUNCTION
+    function decryptthis($data, $key) {
+    $encryption_key = base64_decode($key);
+    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
+    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    }
+
+
+
+
 $selectpaper = "SELECT * FROM examinformation WHERE batchID='{$batchID}' AND lecturID='{$lecID}' and subjectID='{$subjectID}' ORDER BY examPaperID DESC";
 $selectpaper_run = mysqli_query($conn, $selectpaper);
 $getdata = mysqli_fetch_assoc($selectpaper_run);
@@ -36,6 +60,8 @@ $getdataaaa = mysqli_fetch_assoc($selectpaper_runnnnn);
 
 $selectExmas = "SELECT * FROM examinformation WHERE batchID='{$batchID}' AND lecturID='{$lecID}' and subjectID='{$subjectID}'";
 $selectExmas_run = mysqli_query($conn, $selectExmas);
+ 
+ 
 
 
 
@@ -100,6 +126,7 @@ position: absolute;
 
  <!-- Button trigger modal -->
    <div class="showthemessage"></div>
+
  <div class="containerrrrr" style="float: right; right: 10px; position: absolute; top:70px">
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
 Add New Paper
@@ -117,6 +144,21 @@ Print
 Exams
 </button>
 </div>
+
+<?php 
+if($getdataaaa["status"] == 1)
+{
+  ?>
+
+<div class="containerrrrr" style="float: right; right: 293px; position: absolute; top:70px" >
+<a href="checkCurrentExam.php?examPaperID=<?php echo $getdataaaa['examPaperID'];?> & paperName=<?php echo $getdataaaa['paperName'];?>" class="btn btn-danger">Watch</a>
+ 
+</div>
+<?php
+}
+?>
+
+
 
 
 
@@ -248,7 +290,7 @@ if(mysqli_num_rows($sql_run) !== 0) {
 <?php while($hetquestion = mysqli_fetch_assoc($sql_run))
 {
  ?>
-<h6><?php echo $hetquestion['questionNumber'];?> ) <?php echo $hetquestion['questionText'];?></h6>
+<h6><?php echo $hetquestion['questionNumber'];?> ) <?php echo decryptthis($hetquestion['questionText'],$key);?></h6>
   <?php 
   $question = $hetquestion['questionNumber'];
   $selectoprion = "SELECT * FROM questionoptions WHERE questionNumber='$question' AND examPaperID='{$examID}'";
@@ -258,7 +300,7 @@ if(mysqli_num_rows($sql_run) !== 0) {
   {
    ?>
  <p style="margin-left: 20px;"><?php $newtdaa = mysqli_fetch_assoc($selectoprion_run);
-       echo $s . '. ' . $newtdaa['options']; ?> <?php if ($newtdaa['is_correct'] == '1') { ?> 
+       echo $s . '. ' . decryptthis($newtdaa['options'],$key); ?> <?php if ($newtdaa['is_correct'] == '1') { ?> 
        <img src="../images/correct_bb6njyhdw0rf.svg" alt="" srcset="" style="width: 20px; height: 20px;">
        
        <?php }   ?>   </p>
