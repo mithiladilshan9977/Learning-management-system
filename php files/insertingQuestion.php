@@ -43,7 +43,7 @@ if  (mysqli_num_rows($sqlselectBatch_run) > 0){
            }
 }
 
-print_r($studentIDArray);
+ 
 
 
 

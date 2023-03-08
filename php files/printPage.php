@@ -39,7 +39,7 @@ function encryptthis($data, $key) {
 
   $examPaperID = $_GET['examPaperID'];
 $paperName = $_GET['paperName'];
-$sqlone = "SELECT  * FROM question  WHERE question.examPaperID='$examPaperID'";
+$sqlone = "SELECT  *,COUNT(*) FROM question  WHERE question.examPaperID='$examPaperID' GROUP BY questionText HAVING COUNT(*) >1 ORDER BY questionNumber ASC";
 $sql_run = mysqli_query($conn, $sqlone);
 
 $selectLecture = "SELECT lecture.* , deprtment.* FROM lecture LEFT JOIN deprtment ON lecture.departmentID = deprtment.depaermentID WHERE lecture.lectureID='{$lecID}'";
@@ -95,6 +95,7 @@ $DpaetmentName = $getLecData['departmentName'];
 while($hetquestion = mysqli_fetch_assoc($sql_run))
 {
   ?>
+  <!-- ///////////////////////////////////////////////// -->
 <h6><?php echo $hetquestion['questionNumber'];?> ) <?php echo decryptthis($hetquestion['questionText'],$key);?></h6>
    <?php 
    $question = $hetquestion['questionNumber'];
@@ -104,8 +105,10 @@ while($hetquestion = mysqli_fetch_assoc($sql_run))
    for($s = 1 ; $s<=5 ;$s++)
    {
     ?>
+
+    <!-- ///////////////////////////////// -->
   <p style="margin-left: 20px;"><?php $newtdaa = mysqli_fetch_assoc($selectoprion_run);
-                       echo $s .'. '.decryptthis($newtdaa['options'],$key); ?>  <?php if ($newtdaa['is_correct'] == '1') { ?> 
+                       echo $s .'. '. decryptthis($newtdaa['options'],$key); ?>  <?php if ($newtdaa['is_correct'] == '1') { ?> 
                         <img src="../images/correct_bb6njyhdw0rf.svg" alt="" srcset="" style="width: 20px; height: 20px;">
                         
                         <?php }   ?></p>

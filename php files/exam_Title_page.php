@@ -12,8 +12,9 @@ if(!isset($_SESSION['studentID'])){
 
 $ExamPaperID = $_GET['ExamPaperID'];
 $ExamPaperName = $_GET['ExamPaperName'];
+$setudentID = $_SESSION['studentID'];
 
-$selectquetionsSQL = "SELECT * FROM question WHERE examPaperID='{$ExamPaperID}'";
+$selectquetionsSQL = "SELECT * FROM question WHERE examPaperID='{$ExamPaperID}' AND studentID='{$setudentID}'";
 $selectquetionsSQL_run = mysqli_query($conn, $selectquetionsSQL);
 
 $selectime = "SELECT * FROM examinformation";

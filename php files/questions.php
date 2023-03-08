@@ -12,6 +12,7 @@ if(!isset($_SESSION['studentID'])){
 }else{
    $studentbatch = $_SESSION['STUDENTBATCH'];
    $studentid = $_SESSION['subjectID'];
+   $studentID = $_SESSION['studentID'];
 }
 
 $examPaperID = $_GET['ExamPaperID'];
@@ -22,7 +23,7 @@ $examPaperName = $_GET['ExamPaperName'];
 
 
 //get Total question
-$selectQuestionnew = "SELECT * FROM question WHERE examPaperID='$examPaperID' ORDER BY questionNumber  ASC";
+$selectQuestionnew = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY questionNumber  ASC";
 $selectQuestion_runnew = mysqli_query($conn, $selectQuestionnew);
 
  $allQUestions =mysqli_num_rows($selectQuestion_runnew);
@@ -35,7 +36,7 @@ $selectQuestion_runnew = mysqli_query($conn, $selectQuestionnew);
  $examMunites = $gettinewdatanew['minutesnew'];
 
  
- $selectQuestionnew_second = "SELECT * FROM question WHERE examPaperID='$examPaperID'";
+ $selectQuestionnew_second = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID'";
 $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
 
  $allQUestions_new =mysqli_num_rows($selectQuestion_runnew_second);
@@ -171,19 +172,23 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
 </div>
 
 <?php 
- if(isset($_GET['questionNumberID'])){
-   $questonnumberid = $_GET['questionNumberID'];
+ if(isset($_GET['questionNumber']))
+ {
+
+ 
+     $questonnumberid = $_GET['questionNumber'];
    $jump_nav_next_question = $questonnumberid + 1;
    $nump_go_back_question = $questonnumberid - 1;
- $selectQuestionjumping = "SELECT * FROM question WHERE questionNumberID='$questonnumberid' AND examPaperID='$examPaperID'";
+ $selectQuestionjumping = "SELECT * FROM question WHERE questionNumber='$questonnumberid' AND examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND() ";
  $selectQuestion_runjumping = mysqli_query($conn, $selectQuestionjumping);
  
  
  $getquestionjumping = mysqli_fetch_assoc($selectQuestion_runjumping);
+
    $namejumping = $getquestionjumping['questionText'];
    $questioNumberjumping = $getquestionjumping['questionNumber'];
 
-   $selectoptions_jump = "SELECT * FROM questionoptions WHERE questionNumber='$questioNumberjumping' AND  examPaperID='$examPaperID'";
+   $selectoptions_jump = "SELECT * FROM questionoptions WHERE questionNumber='$questioNumberjumping' AND  examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND() ";
 $selectoptions_run_jump = mysqli_query($conn, $selectoptions_jump);
 
  
@@ -223,7 +228,7 @@ while($datanewneww = mysqli_fetch_assoc($selectoptions_run_jump))
 if($questioNumberjumping >=2)
 {
     ?>
-    <a href="questions.php?questionNumberID=<?php echo $nump_go_back_question;?> & ExamPaperID=<?php echo $examPaperID?> & ExamPaperName=<?php echo $examPaperName?>"  class="moveingbtns"><img src="../images/backward_arrow_t9553ymrahtf.svg"   alt="" srcset="" class="backwordarrow"></a>
+    <a href="questions.php?questionNumber=<?php echo $nump_go_back_question;?> & ExamPaperID=<?php echo $examPaperID?> & ExamPaperName=<?php echo $examPaperName?>"  class="moveingbtns"><img src="../images/backward_arrow_t9553ymrahtf.svg"   alt="" srcset="" class="backwordarrow"></a>
     
     <?php
 }
@@ -232,7 +237,7 @@ if($questioNumberjumping < $allQUestions_new)
 
 {
     ?>
-<a href="questions.php?questionNumberID=<?php echo $jump_nav_next_question;?> & ExamPaperID=<?php echo $examPaperID?> & ExamPaperName=<?php echo $examPaperName?>"  class="moveingbtns"><img src="../images/backward_arrow_t9553ymrahtf.svg"   alt="" srcset="" class="forwclass"> </a>
+<a href="questions.php?questionNumber=<?php echo $jump_nav_next_question;?> & ExamPaperID=<?php echo $examPaperID?> & ExamPaperName=<?php echo $examPaperName?>"  class="moveingbtns"><img src="../images/backward_arrow_t9553ymrahtf.svg"   alt="" srcset="" class="forwclass"> </a>
     <?php
 }
 ?>
@@ -292,7 +297,7 @@ if(isset($_GET['number']))
    $nextNumber = $statringNumber + 1;
    $previoueNumber = $statringNumber - 1;
    
-   $selectQuestion = "SELECT * FROM question WHERE questionNumber='$statringNumber' AND examPaperID='$examPaperID'";
+   $selectQuestion = "SELECT * FROM question WHERE questionNumber='$statringNumber' AND examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND()";
    $selectQuestion_run = mysqli_query($conn, $selectQuestion);
    
    $getquestion = mysqli_fetch_assoc($selectQuestion_run);
@@ -303,7 +308,7 @@ if(isset($_GET['number']))
    
    //options
    
-   $selectoptions = "SELECT * FROM questionoptions WHERE questionNumber='$statringNumber' AND  examPaperID='$examPaperID'";
+   $selectoptions = "SELECT * FROM questionoptions WHERE questionNumber='$statringNumber' AND  examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND()";
    $selectoptions_run = mysqli_query($conn, $selectoptions);
    ?>
 
@@ -313,7 +318,7 @@ if(isset($_GET['number']))
 </div>
 
 
-
+<!-- //////////////////////////////////////////////////////////////// -->
 <div class="container outerdiv" style="width: 650px; margin-top: 15px; position: relative;">
 <b><p class="whatisquestion" style="margin: 10px;"><?php echo $questioNumber.') ' . decryptthis($name,$key) ;
 ?></p></b>
@@ -323,7 +328,7 @@ while($datanew = mysqli_fetch_assoc($selectoptions_run))
     ?>
     <div class="questionHolder">
         
-<input type="radio" name="question"  <?php if ($datanew['studentGivenAn'] == 1) {
+<input type="radio" name="question" required  <?php if ($datanew['studentGivenAn'] == 1) {
             echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $datanew['optionID'];?>"  style="cursor: pointer;"> <p class="optionText"> <?php echo decryptthis($datanew['options'],$key); ?></p>  
 </div>
     <?php
@@ -395,13 +400,13 @@ if($nextNumber > $allQUestions)
 }
 
 ?>
-
+<!-- //////////////////////////////////////////////////////////// -->
 <!-- number navigation -->
 <div class="container" style=" position: fixed;bottom:240px; right: 10px; width: 400px; height: 395px;  padding: 5px;"> 
  <?php 
  while($newdataanew = mysqli_fetch_assoc($selectQuestion_runnew)) {
     $questionNumber = $newdataanew['questionNumber'];
-    $selectcount = "SELECT MAX(studentGivenAn) as studentGivenAn,questionNumber FROM questionoptions WHERE questionNumber='{$questionNumber}' AND examPaperID='{$examPaperID}'  ";
+    $selectcount = "SELECT MAX(studentGivenAn) as studentGivenAn,questionNumber FROM questionoptions WHERE questionNumber='{$questionNumber}' AND examPaperID='{$examPaperID}' AND studentID='$studentID' ";
     $selectcount_run = mysqli_query($conn, $selectcount);
     $resultnew = mysqli_fetch_assoc($selectcount_run);
    
@@ -419,7 +424,7 @@ if($resultnew['studentGivenAn'] == 1)
  
  
  
-<a href="questions.php?questionNumberID=<?php echo $newdataanew['questionNumberID'];?> & ExamPaperID=<?php echo $examPaperID?> & ExamPaperName=<?php echo $examPaperName?>" style="align-items: center; position: relative; bottom: 7px; text-decoration: none; padding: 10px; width: 100%; height: 100%; display: block; margin: 0px auto;"><?php echo $newdataanew['questionNumber'];?></a>
+<a href="questions.php?questionNumber=<?php echo $newdataanew['questionNumber'];?> & ExamPaperID=<?php echo $examPaperID?> & ExamPaperName=<?php echo $examPaperName?>" style="align-items: center; position: relative; bottom: 7px; text-decoration: none; padding: 10px; width: 100%; height: 100%; display: block; margin: 0px auto;"><?php echo $newdataanew['questionNumber'];?></a>
  </span>
 
 <?php
@@ -488,6 +493,6 @@ $.ajax({
 <script src="detectTabnew.js"></script>
 <script src="timmernew.js"></script>
 <script src="gobackwords.js"></script>
-<script src="studentAnswernew.js"></script>
+<script src="studentAnswer.js"></script>
  
 </html>

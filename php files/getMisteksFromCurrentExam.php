@@ -66,9 +66,8 @@ $selectStudentSQL_run = mysqli_query($conn, $selectStudentSQL);
              
         }else
         {
-            while($rows = mysqli_fetch_assoc($selectStudentSQL_run))
-            {
-                ?><thead>
+          ?>
+<thead>
                   <p >Number of students detected <span class="numbeofstudents"><?php echo mysqli_num_rows($selectStudentSQL_run)?></span></p>
                 <tr>
                 <th scope="col">Index Number</th>
@@ -77,6 +76,11 @@ $selectStudentSQL_run = mysqli_query($conn, $selectStudentSQL);
          
                 </tr>
             </thead>
+
+<?php
+            while($rows = mysqli_fetch_assoc($selectStudentSQL_run))
+            {
+                ?>
       
             <tbody>
 

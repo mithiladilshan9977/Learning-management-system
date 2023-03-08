@@ -10,13 +10,15 @@ if(!isset($_SESSION['studentID'])){
   
 } else{
   $studentid = $_SESSION['studentID'];
-     $numberofCorrectAnswers =  $_SESSION['STUDENT_GIVEN_ANSWERS'];
+  $numberofCorrectAnswers =  $_SESSION['STUDENT_GIVEN_ANSWERS'];
+     
 }
+ 
  
 
 $examPaperID = $_GET['examPaperID'];
 
-$selectQuestionnew = "SELECT * FROM question WHERE examPaperID='$examPaperID'";
+$selectQuestionnew = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='{$studentid}'";
 $selectQuestionnew_run = mysqli_query($conn, $selectQuestionnew);
   $allQuestions = mysqli_num_rows($selectQuestionnew_run);
 

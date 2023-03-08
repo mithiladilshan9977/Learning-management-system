@@ -58,14 +58,14 @@ $selectpaper_runnnnn = mysqli_query($conn, $selectpapernewww);
 $getdataaaa = mysqli_fetch_assoc($selectpaper_runnnnn);
 
 
-$selectExmas = "SELECT * FROM examinformation WHERE batchID='{$batchID}' AND lecturID='{$lecID}' and subjectID='{$subjectID}'";
+$selectExmas = "SELECT * FROM examinformation WHERE batchID='{$batchID}' AND lecturID='{$lecID}' and subjectID='{$subjectID}' ";
 $selectExmas_run = mysqli_query($conn, $selectExmas);
  
  
 
 
 
-$sqlone = "SELECT  * FROM question  WHERE question.examPaperID='$examID'";
+$sqlone = "SELECT  *,COUNT(*) FROM question  WHERE question.examPaperID='$examID'GROUP BY questionText HAVING COUNT(*) >1 ORDER BY questionNumber ASC";
 $sql_run = mysqli_query($conn, $sqlone);
 
  
@@ -76,6 +76,71 @@ $LectFName = $getLecData['firstname'];
 $LectFLName = $getLecData['lastname'];
 $DpaetmentName = $getLecData['departmentName'];
 
+
+if (isset($_POST['uploadExcel'])) {
+ 
+
+  $filename = $_FILES['excel']['name'];
+  $fileExtention = explode('.', $filename);
+  $fileExtention = strtolower(end($fileExtention));
+
+  $newFileName = date("Y.m.d") . "-".date("h.i.sa") . "."  . $fileExtention;
+  $targetDirectory = "../admin/excelfiles/" . $newFileName;
+  move_uploaded_file($_FILES['excel']['tmp_name'], $targetDirectory);
+
+  error_reporting(0);
+  ini_set('display_errors', 0);
+
+  require("../admin/excelReader/excel_reader2.php");
+  require("../admin/excelReader/SpreadsheetReader.php");
+ 
+  $reader = new SpreadsheetReader($targetDirectory);
+ foreach($reader as $key => $row){
+  
+    
+    $Numberofrows = $row[0];
+    $whatisQuestion = $row[1];
+
+    $option1 = $row[2];
+    $option2 = $row[3];
+    $option3 = $row[4];
+    $option4 = $row[5];
+    $option5 = $row[6];
+
+    $insertQuesSQL = "INSERT INTO question(examPaperID,questionNumber,lectureID,studentID,questionText) VALUES (1  ,2,55,10,'dwadwd')";
+    $newsqlInsert_run = mysqli_query($conn , $newsqlInsert);
+    if($newsqlInsert_run){
+      echo '<script>alert("aadwadawd")</script>';
+    }
+
+
+//     $studentIDArray = [];
+//     $sqlselectBatch = "SELECT student.*, batch.* FROM student LEFT JOIN batch ON student.batchID = batch.BatchID WHERE batch.BatchID = '$batchID'";
+//     $sqlselectBatch_run = mysqli_query($conn, $sqlselectBatch);
+// if  (mysqli_num_rows($sqlselectBatch_run) > 0){
+//            while($row= mysqli_fetch_array($sqlselectBatch_run)){
+//         $studentIDArray[] = $row['studentID'];
+//            }
+// }
+  // echo  $startUqestioNumber = ceil($Numberofrows/5);
+
+    // for($i=1; $i<=$startUqestioNumber; $i++){
+      
+      
+    // }
+// foreach($studentIDArray as $StudentIndexNum){
+//     $StudentIndexNum;
+//     $insertQuesSQL_run = mysqli_query($conn, $insertQuesSQL);
+// }
+
+   
+
+
+
+ }
+
+
+}
 ?>
 
 <!DOCTYPE html>
@@ -117,6 +182,9 @@ position: absolute;
           opacity: 0.7;
           color: red;
         }
+        #excelfile{
+      display: none;
+    }
 </style>
 <body>
 <?php include("innerpreloader.php");?>
@@ -393,6 +461,21 @@ if(mysqli_num_rows($sql_run) !== 0) {
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-success" id="savebtn">Create Paper</button>
       </div>
+      <div class="modal-footer">
+
+      <form action="" method="post" enctype="multipart/form-data">
+         <img src=" " class="img-thumbnail" alt="...">
+          <input type = "file"   id="excelfile" accept=".xlsx" name="excel" required>
+         <label for="excelfile" class="btn btn-success"  >Import Excel</label>
+         <input type="submit" value="Upload" class="btn btn-success" name="uploadExcel" required>
+
+         
+
+
+
+ </form>
+    </div>
+
     </div>
   </div>
 </div>
