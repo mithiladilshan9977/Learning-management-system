@@ -154,6 +154,9 @@
    top: 10px;
    right: 20px;
 }
+.inputBoxses{
+   padding-left: 7px;
+}
 .aboutus > a{
    text-decoration: none;
    color: aliceblue;
@@ -215,10 +218,10 @@ Saegis Campus is an unmatched investment for those who seek to pursue truly a li
        
       
             <p class="para">User name</p>
-            <input type="text" placeholder="User name" id="username">
+            <input type="text" placeholder="User name" id="username" class="inputBoxses">
 
             <p class="para">Password</p>
-            <input type="text" placeholder="Password" id="password">
+            <input type="text" placeholder="Password" id="password" class="inputBoxses">
 
             <button type=" "   id="login">Log in</button>
       

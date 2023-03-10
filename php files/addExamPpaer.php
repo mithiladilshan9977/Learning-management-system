@@ -77,15 +77,27 @@ $LectFLName = $getLecData['lastname'];
 $DpaetmentName = $getLecData['departmentName'];
 
 
+//get student index number for uqestions uploading
+$studentIDArray = [];
+$sqlselectBatch = "SELECT student.*, batch.* FROM student LEFT JOIN batch ON student.batchID = batch.BatchID WHERE batch.BatchID = '$batchID'";
+$sqlselectBatch_run = mysqli_query($conn, $sqlselectBatch);
+if  (mysqli_num_rows($sqlselectBatch_run) > 0){
+       while($row= mysqli_fetch_array($sqlselectBatch_run)){
+    $studentIDArray[] = $row['studentID'];
+       }
+}
+
+
+use SimpleExcel\SimpleExcel;
+
 if (isset($_POST['uploadExcel'])) {
- 
 
   $filename = $_FILES['excel']['name'];
   $fileExtention = explode('.', $filename);
   $fileExtention = strtolower(end($fileExtention));
 
   $newFileName = date("Y.m.d") . "-".date("h.i.sa") . "."  . $fileExtention;
-  $targetDirectory = "../admin/excelfiles/" . $newFileName;
+  $targetDirectory = "./examPapersExcelFils/" . $newFileName;
   move_uploaded_file($_FILES['excel']['tmp_name'], $targetDirectory);
 
   error_reporting(0);
@@ -93,54 +105,124 @@ if (isset($_POST['uploadExcel'])) {
 
   require("../admin/excelReader/excel_reader2.php");
   require("../admin/excelReader/SpreadsheetReader.php");
- 
+
   $reader = new SpreadsheetReader($targetDirectory);
+  $question_reader = new SpreadsheetReader($targetDirectory);
+
  foreach($reader as $key => $row){
-  
-    
-    $Numberofrows = $row[0];
-    $whatisQuestion = $row[1];
-
-    $option1 = $row[2];
-    $option2 = $row[3];
-    $option3 = $row[4];
-    $option4 = $row[5];
-    $option5 = $row[6];
-
-    $insertQuesSQL = "INSERT INTO question(examPaperID,questionNumber,lectureID,studentID,questionText) VALUES (1  ,2,55,10,'dwadwd')";
-    $newsqlInsert_run = mysqli_query($conn , $newsqlInsert);
-    if($newsqlInsert_run){
-      echo '<script>alert("aadwadawd")</script>';
-    }
-
-
-//     $studentIDArray = [];
-//     $sqlselectBatch = "SELECT student.*, batch.* FROM student LEFT JOIN batch ON student.batchID = batch.BatchID WHERE batch.BatchID = '$batchID'";
-//     $sqlselectBatch_run = mysqli_query($conn, $sqlselectBatch);
-// if  (mysqli_num_rows($sqlselectBatch_run) > 0){
-//            while($row= mysqli_fetch_array($sqlselectBatch_run)){
-//         $studentIDArray[] = $row['studentID'];
-//            }
-// }
-  // echo  $startUqestioNumber = ceil($Numberofrows/5);
-
-    // for($i=1; $i<=$startUqestioNumber; $i++){
-      
-      
-    // }
-// foreach($studentIDArray as $StudentIndexNum){
-//     $StudentIndexNum;
-//     $insertQuesSQL_run = mysqli_query($conn, $insertQuesSQL);
-// }
-
    
+    
+    $hours = $row[0];
+    $minutes = $row[1];
+    $passowrd = $row[2];
+    $papername = $row[3];
+
+ 
 
 
+    $newsqlInsert = "INSERT INTO examinformation (batchID , lecturID, subjectID, hoursnew,minutesnew,password,paperName) VALUES('$batchID','$lecID','$subjectID','$hours','$minutes','$passowrd','$papername')";
+    $newsqlInsert_run = mysqli_query($conn , $newsqlInsert);
 
+    $selectHigtVal = "SELECT MAX(examPaperID) as examPaperID_new FROM examinformation WHERE lecturID='{$lecID}'";
+    $selectHigtVal_run = mysqli_query($conn ,$selectHigtVal);
+    $resultnew = mysqli_fetch_assoc($selectHigtVal_run);
+   echo $hightExamPaper = $resultnew['examPaperID_new'];
+
+  
+
+    $insertQuestion = "INSERT INTO question(examPaperID,lectureID,studentID,questionText) VALUES('$hightExamPaper','$lecID','20S15006', '')";
+
+ 
+ }
+ 
+
+ 
+  
  }
 
 
+
+ if (isset($_POST['uploadExcel_question'])) {
+
+  echo "<script>alert('apple')</script>";
+  $filename = $_FILES['excel_question']['name'];
+  $fileExtention = explode('.', $filename);
+  $fileExtention = strtolower(end($fileExtention));
+
+  $newFileName = date("Y.m.d") . "-".date("h.i.sa") . "."  . $fileExtention;
+  $targetDirectory = "./examPapersExcelFils/" . $newFileName;
+  move_uploaded_file($_FILES['excel_question']['tmp_name'], $targetDirectory);
+
+  error_reporting(0);
+  ini_set('display_errors', 0);
+
+  require("../admin/excelReader/excel_reader2.php");
+  require("../admin/excelReader/SpreadsheetReader.php");
+
+  $reader = new SpreadsheetReader($targetDirectory);
+ 
+ 
+ foreach($reader as $key => $row){
+   
+    
+  $PaperID = $row[0];
+  $questionumber_new = $row[1];
+  $questionText = $row[2];
+  
+  foreach($studentIDArray as $StudentIndexNum){
+    $StudentIndexNum;
+    $insertQuestion = "INSERT INTO question(examPaperID,questionNumber,lectureID,studentID,questionText) VALUES('$PaperID','$questionumber_new','$lecID','$StudentIndexNum', '$questionText')";
+    $insertQuestion_run = mysqli_query($conn ,$insertQuestion);
 }
+ 
+}
+
+  
+ }
+
+ 
+// add question options
+
+ if (isset($_POST['uploadExcel_question_options'])) {
+
+  echo "<script>alert('options')</script>";
+  $filename = $_FILES['excel_question_options']['name'];
+  $fileExtention = explode('.', $filename);
+  $fileExtention = strtolower(end($fileExtention));
+
+  $newFileName = date("Y.m.d") . "-".date("h.i.sa") . "."  . $fileExtention;
+  $targetDirectory = "./examPapersExcelFils/" . $newFileName;
+  move_uploaded_file($_FILES['excel_question_options']['tmp_name'], $targetDirectory);
+
+  error_reporting(0);
+  ini_set('display_errors', 0);
+
+  require("../admin/excelReader/excel_reader2.php");
+  require("../admin/excelReader/SpreadsheetReader.php");
+
+  $reader = new SpreadsheetReader($targetDirectory);
+ 
+ 
+ foreach($reader as $key => $row){
+   
+    
+  $PaperID = $row[0];
+  $questionumber_new = $row[1];
+  $options = $row[2];
+  $is_correct = $row[3];
+
+  
+  foreach($studentIDArray as $StudentIndexNum){
+    $StudentIndexNum;
+    $insertQuestion = "INSERT INTO questionoptions(examPaperID,questionNumber,lectureID,studentID,options,is_correct) VALUES('$PaperID','$questionumber_new','$lecID','$StudentIndexNum', '$options','$is_correct')";
+    $insertQuestion_run = mysqli_query($conn ,$insertQuestion);
+}
+ 
+}
+
+  
+ }
+
 ?>
 
 <!DOCTYPE html>
@@ -185,6 +267,16 @@ position: absolute;
         #excelfile{
       display: none;
     }
+
+    #excelfile_question{
+      display: none;
+    }
+
+    #excelfile_question_options{
+      display: none;
+    }
+
+
 </style>
 <body>
 <?php include("innerpreloader.php");?>
@@ -463,17 +555,44 @@ if(mysqli_num_rows($sql_run) !== 0) {
       </div>
       <div class="modal-footer">
 
-      <form action="" method="post" enctype="multipart/form-data">
+      <form action="addExamPpaer.php" method="post" enctype="multipart/form-data">
+        <p>Upload info of exam</p>
          <img src=" " class="img-thumbnail" alt="...">
-          <input type = "file"   id="excelfile" accept=".xlsx" name="excel" required>
+          <input type = "file"   id="excelfile" accept=".xlsx"  name="excel" required>
          <label for="excelfile" class="btn btn-success"  >Import Excel</label>
          <input type="submit" value="Upload" class="btn btn-success" name="uploadExcel" required>
-
-         
-
-
-
+   
  </form>
+ 
+
+
+
+<!-- /// add questions -->
+
+ <form action="addExamPpaer.php" method="post" enctype="multipart/form-data">
+          <p>Upload questions of exam</p>
+
+         <img src=" " class="img-thumbnail" alt="...">
+          <input type = "file"   id="excelfile_question"  accept=".xlsx" name="excel_question" required>
+         <label for="excelfile_question" class="btn btn-success"  >Import Excel Question</label>
+         <input type="submit" value="Upload question" class="btn btn-success" name="uploadExcel_question" required>
+   
+ </form>
+
+
+<!-- add oprions -->
+ <form action="addExamPpaer.php" method="post" enctype="multipart/form-data">
+ <p>Upload options of questions</p>
+
+         <img src=" " class="img-thumbnail" alt="...">
+          <input type = "file"   id="excelfile_question_options"  accept=".xlsx" name="excel_question_options" required>
+         <label for="excelfile_question_options" class="btn btn-success"  >Import Excel options</label>
+         <input type="submit" value="Upload options" class="btn btn-success" name="uploadExcel_question_options" required>
+   
+ </form>
+
+
+
     </div>
 
     </div>

@@ -34,6 +34,8 @@ function encryptthis($data, $key) {
     list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
     return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
     }
+
+    
     $studentIDArray = [];
     $sqlselectBatch = "SELECT student.*, batch.* FROM student LEFT JOIN batch ON student.batchID = batch.BatchID WHERE batch.BatchID = '$batchID'";
     $sqlselectBatch_run = mysqli_query($conn, $sqlselectBatch);

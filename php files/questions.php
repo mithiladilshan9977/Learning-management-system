@@ -20,7 +20,49 @@ $examPaperID = $_GET['ExamPaperID'];
 $_SESSION['EXAM_PAPER_ID'] = $examPaperID;
 
 $examPaperName = $_GET['ExamPaperName'];
-
+if(isset($_POST["Import"])){
+		
+ 
+		echo $filename=$_FILES["file"]["tmp_name"];
+		
+ 
+		 if($_FILES["file"]["size"] > 0)
+		 {
+ 
+		  	$file = fopen($filename, "r");
+	         while (($data = fgetcsv($file, 10000, ",")) !== FALSE)
+	         {
+	    
+	          //It wiil insert a row to our subject table from our csv file`
+	           $sql ="INSERT into employee(name,email,phone) values('$data[0]','$data[1]','$data[2]')";
+	         //we are using mysql_query function. it returns a resource on true else False on error
+	          $result = mysql_query( $sql, $conn );
+				if(! $result )
+				{
+					echo "<script type=\"text/javascript\">
+							alert(\"Invalid File:Please Upload CSV File.\");
+							window.location = \"index.php\"
+						</script>";
+				
+				}
+ 
+	         }
+	         fclose($file);
+	         //throws a message if data successfully imported to mysql database from excel file
+	         echo "<script type=\"text/javascript\">
+						alert(\"CSV File has been successfully Imported.\");
+						window.location = \"index.php\"
+					</script>";
+	        
+			 
+ 
+			 //close of connection
+			mysql_close($conn); 
+				
+		 	
+			
+		 }
+	}	 
 
 //get Total question
 $selectQuestionnew = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY questionNumber  ASC";
@@ -36,10 +78,18 @@ $selectQuestion_runnew = mysqli_query($conn, $selectQuestionnew);
  $examMunites = $gettinewdatanew['minutesnew'];
 
  
- $selectQuestionnew_second = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID'";
+ $selectQuestionnew_second = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID'  ";
 $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
 
  $allQUestions_new =mysqli_num_rows($selectQuestion_runnew_second);
+
+
+ $reandomSQL = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND() ";
+ $reandomSQL_run = mysqli_query($conn, $reandomSQL);
+ 
+  
+
+
 
 
  $key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
@@ -149,11 +199,162 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
       transition: 0.2s all ease-in-out;
       box-shadow: 1px 1px 5px 1px rgba(34, 0, 255, 0.393);
      }
+
+     .quesnumberValue{
+       display: none;
+     }
+     .maincontainerbox{
+      margin: 0px auto;
+      width: 70%;
+      padding: 10px;
+    
+     }
+     .whatisquestionbox{
+      background-color:rgba(0, 204, 255, 0.286);
+      border-radius: 10px;
+      padding: 10px;
+     
+      font-size: 23px;
+      font-weight: bold;
+      
+
+     }
+     .optionsBox{
+      padding: 10px 0px 0px 20px;
+      font-size: 18px;
+
+     }
+     body{
+      touch-action: none;
+     }
+     .whatisquestionCSS{
+      color: rgba(10, 0, 100, 0.886);
+      font-size: 18px;
+     }
+     .campImage{
+      max-width: 150px;
+      min-height: 150px;
+      text-align:center;
+      margin: 0px auto;
+     }
+     .mainheader{
+      
+     }
+     .inforBox{
+      display: flex;
+      flex-direction:   column;
+      align-items: flex-start;
+
+     }
 </style> 
 <body>
 <?php include("innerpreloader.php");?>
 
 <div id="response"> </div>
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- //////////////////////////////////////////////////////////////////////////////// -->
+<div class="container maincontainerbox">
+<div class="modal-header mainheader">
+         <img src="../images/camp.png" class="rounded float-start campImage"/>  
+
+         
+  </div>
+  
+  <div class="modal-header  inforBox">
+ <p>Conducted By : Prabath samarasignha</p>
+ <p>Subject : Advaced databases</p>   
+ <p>Time : 2.30 Hours</p>     
+
+   </div>
+
+    
+<?php 
+ 
+ 
+
+$counter = 1;
+while($rows = mysqli_fetch_assoc($reandomSQL_run))
+{  
+     
+    
+
+     ?>
+       <div class="container whatisquestionbox">
+         
+        <p class="whatisquestionCSS"></b><?php echo $counter.' ) ';?> <?php echo decryptthis($rows['questionText'],$key) ?> </b></p>
+</div>
+
+
+
+        
+         <div class="container optionsBox">
+         <?php      $quesnumbr = $rows['questionNumber'] ; 
+
+        $selectoptions_randowm = "SELECT * FROM questionoptions WHERE questionNumber='$quesnumbr' AND  examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND() ";
+        $selectoptions_random_run = mysqli_query($conn, $selectoptions_randowm);
+
+        while($options = mysqli_fetch_assoc($selectoptions_random_run ))
+        {
+         ?>
+        <p>   <input type='text'  class="quesnumberValue" value=<?php echo $options['questionNumber']?>>  <input type="radio" id="theradiobutton"  name="<?php echo $options['questionNumber']?>"   <?php if ($options['studentGivenAn'] == 1) {
+            echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $options['optionID'];?>"  style="cursor: pointer;">  <?php echo decryptthis($options['options'],$key) ?> </p>
+   
+
+<?php
+        }
+        
+        ?>
+         <span class="responseshow">  </span>
+      </div>
+   
+<?php
+   $counter ++ ;  
+}
+
+?>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <input type="hidden" value="<?php echo $examHours + 1?>" id="setHours">
                <input type="hidden" value="<?php echo $examMunites?>" id="setMunites">
  
@@ -293,7 +494,8 @@ if($questioNumberjumping == $allQUestions_new)
 
 <?php 
 if(isset($_GET['number']))
-{$statringNumber =  $_GET['number'];
+
+{    $statringNumber =  $_GET['number'];
    $nextNumber = $statringNumber + 1;
    $previoueNumber = $statringNumber - 1;
    
@@ -488,7 +690,8 @@ $.ajax({
 
     },1000);
  </script>
- 
+  <script src="vertical_question_form_replace.js"></script>
+  
  <script src="finalpassword.js"></script>
 <script src="detectTabnew.js"></script>
 <script src="timmernew.js"></script>

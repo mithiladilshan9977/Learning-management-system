@@ -50,6 +50,7 @@ else{
         $selectOptions = "SELECT * FROM questionoptions WHERE questionNumber='{$questionNumber}'AND studentID='{$studentdID}' AND questionNumber='{$questionNumber}'";
         $selectOptions_run = mysqli_query($conn, $selectOptions);
         $numberOfRows = mysqli_num_rows($selectOptions_run);
+
         for( $statringOptionNumber ;  $statringOptionNumber<=$numberOfRows;$statringOptionNumber++ ) {
             
             $forloop = "UPDATE questionoptions SET studentGivenAn=0 WHERE questionNumber='{$questionNumber}'AND studentID='{$studentdID}' AND questionNumber='{$questionNumber}'";
