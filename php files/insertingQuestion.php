@@ -58,7 +58,7 @@ $correctNumber = mysqli_real_escape_string($conn , $_POST['correctNumber']) ;
 $encryptedWhatIsQuestion = encryptthis($whatisQuestion, $key);
 
 $choice = array();
-
+ 
 
   $choice[1] = mysqli_real_escape_string($conn ,  $_POST['choice1']) ;
   $choice[2] =mysqli_real_escape_string($conn ,  $_POST['choice2']) ;

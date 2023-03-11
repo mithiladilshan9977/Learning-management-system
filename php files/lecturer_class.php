@@ -241,15 +241,7 @@ $deletedsqlquery = mysqli_query($conn, $deletedSQL);
 
     <?php include("lecturer_naviga_bar.php")  ?>
 
-
-
-
-
-
-
-
-
-
+ 
     <img src="../images/setting_t5vyfl9iph3m.svg" alt="" id="theseeetingicon" data-bs-toggle="tooltip" data-bs-title=" Settings" >
     <div class="showsetting">
     <ul class="ulnew" >

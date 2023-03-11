@@ -27,22 +27,7 @@ if(isset($_SESSION['EXAM_PAPER_ID'])){
 
 
 
-$key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
 
-//ENCRYPT FUNCTION
-function encryptthis($data, $key) {
-    $encryption_key = base64_decode($key);
-    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
-    return base64_encode($encrypted . '::' . $iv);
-    }
-    
-    //DECRYPT FUNCTION
-    function decryptthis($data, $key) {
-    $encryption_key = base64_decode($key);
-    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
-    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
-    }
 
 
 
@@ -64,10 +49,9 @@ $selectExmas_run = mysqli_query($conn, $selectExmas);
  
 
 
-
+// select exam paper format
 $sqlone = "SELECT  *,COUNT(*) FROM question  WHERE question.examPaperID='$examID'GROUP BY questionText HAVING COUNT(*) >1 ORDER BY questionNumber ASC";
 $sql_run = mysqli_query($conn, $sqlone);
-
  
 $selectLecture = "SELECT lecture.* , deprtment.* FROM lecture LEFT JOIN deprtment ON lecture.departmentID = deprtment.depaermentID WHERE lecture.lectureID='{$lecID}'";
 $selectLecture_run = mysqli_query($conn, $selectLecture);
@@ -77,7 +61,7 @@ $LectFLName = $getLecData['lastname'];
 $DpaetmentName = $getLecData['departmentName'];
 
 
-//get student index number for uqestions uploading
+ //get student index number for uqestions uploading
 $studentIDArray = [];
 $sqlselectBatch = "SELECT student.*, batch.* FROM student LEFT JOIN batch ON student.batchID = batch.BatchID WHERE batch.BatchID = '$batchID'";
 $sqlselectBatch_run = mysqli_query($conn, $sqlselectBatch);
@@ -87,9 +71,28 @@ if  (mysqli_num_rows($sqlselectBatch_run) > 0){
        }
 }
 
+$key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
 
-use SimpleExcel\SimpleExcel;
+//ENCRYPT FUNCTION
+function encryptthis($data, $key) {
+    $encryption_key = base64_decode($key);
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    return base64_encode($encrypted . '::' . $iv);
+    }
+    
+    //DECRYPT FUNCTION
+    function decryptthis($data, $key) {
+    $encryption_key = base64_decode($key);
+    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
+    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    }
 
+
+ use PhpOffice\PhpSpreadsheet\Spreadsheet;
+ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+// exam info
 if (isset($_POST['uploadExcel'])) {
 
   $filename = $_FILES['excel']['name'];
@@ -107,44 +110,56 @@ if (isset($_POST['uploadExcel'])) {
   require("../admin/excelReader/SpreadsheetReader.php");
 
   $reader = new SpreadsheetReader($targetDirectory);
-  $question_reader = new SpreadsheetReader($targetDirectory);
+
 
  foreach($reader as $key => $row){
-   
-    
-    $hours = $row[0];
+     $hours = $row[0];
     $minutes = $row[1];
     $passowrd = $row[2];
     $papername = $row[3];
-
- 
-
-
+   
     $newsqlInsert = "INSERT INTO examinformation (batchID , lecturID, subjectID, hoursnew,minutesnew,password,paperName) VALUES('$batchID','$lecID','$subjectID','$hours','$minutes','$passowrd','$papername')";
     $newsqlInsert_run = mysqli_query($conn , $newsqlInsert);
 
-    $selectHigtVal = "SELECT MAX(examPaperID) as examPaperID_new FROM examinformation WHERE lecturID='{$lecID}'";
+
+
+
+
+
+    if($newsqlInsert_run){
+
+  echo "<script>alert('File uploaded successfully')</script>";
+      
+     }
+   $selectHigtVal = "SELECT MAX(examPaperID) as examPaperID_new FROM examinformation WHERE lecturID='{$lecID}'";
     $selectHigtVal_run = mysqli_query($conn ,$selectHigtVal);
     $resultnew = mysqli_fetch_assoc($selectHigtVal_run);
-   echo $hightExamPaper = $resultnew['examPaperID_new'];
+    echo $hightExamPaper = $resultnew['examPaperID_new'];
 
-  
-
-    $insertQuestion = "INSERT INTO question(examPaperID,lectureID,studentID,questionText) VALUES('$hightExamPaper','$lecID','20S15006', '')";
-
+        //php composer excel
+ require 'vendor/autoload.php';
+ $spreadsheet = new Spreadsheet();
+ $activeWorksheet = $spreadsheet->getActiveSheet();
+ $activeWorksheet->setCellValue('A1', $hightExamPaper);
  
+ $writer = new Xlsx($spreadsheet);
+ $writer->save('Questions.xlsx');
+
+
+
+ }  
  }
- 
+
+
+
+
+
+
+ // exam question upload
 
  
-  
- }
+if (isset($_POST['uploadExcel_question'])) {
 
-
-
- if (isset($_POST['uploadExcel_question'])) {
-
-  echo "<script>alert('apple')</script>";
   $filename = $_FILES['excel_question']['name'];
   $fileExtention = explode('.', $filename);
   $fileExtention = strtolower(end($fileExtention));
@@ -168,10 +183,11 @@ if (isset($_POST['uploadExcel'])) {
   $PaperID = $row[0];
   $questionumber_new = $row[1];
   $questionText = $row[2];
+  $encrptedQuestion =  encryptthis($questionText, $key);
   
   foreach($studentIDArray as $StudentIndexNum){
     $StudentIndexNum;
-    $insertQuestion = "INSERT INTO question(examPaperID,questionNumber,lectureID,studentID,questionText) VALUES('$PaperID','$questionumber_new','$lecID','$StudentIndexNum', '$questionText')";
+    $insertQuestion = "INSERT INTO question(examPaperID,questionNumber,lectureID,studentID,questionText) VALUES('$PaperID','$questionumber_new','$lecID','$StudentIndexNum', '$encrptedQuestion')";
     $insertQuestion_run = mysqli_query($conn ,$insertQuestion);
 }
  
@@ -180,12 +196,11 @@ if (isset($_POST['uploadExcel'])) {
   
  }
 
+ // add question options
+
+if (isset($_POST['uploadExcel_question_options'])) {
+
  
-// add question options
-
- if (isset($_POST['uploadExcel_question_options'])) {
-
-  echo "<script>alert('options')</script>";
   $filename = $_FILES['excel_question_options']['name'];
   $fileExtention = explode('.', $filename);
   $fileExtention = strtolower(end($fileExtention));
@@ -201,26 +216,53 @@ if (isset($_POST['uploadExcel'])) {
   require("../admin/excelReader/SpreadsheetReader.php");
 
   $reader = new SpreadsheetReader($targetDirectory);
- 
- 
- foreach($reader as $key => $row){
-   
+
+   $optionArray = [];
+   $theAnswer="";
     
-  $PaperID = $row[0];
-  $questionumber_new = $row[1];
-  $options = $row[2];
-  $is_correct = $row[3];
+  foreach($reader as $key => $row ){
 
+    $examPpaperID= $row[0];
+    $questioNumber = $row[1];
+
+        $optionArray[0] = encryptthis($row[2],$key);
+        $optionArray[1] = encryptthis($row[3],$key);
+        $optionArray[2] = encryptthis($row[4],$key);
+        $optionArray[3] = encryptthis($row[5],$key);
+        $optionArray[4] = encryptthis($row[6],$key);
+
+    $theAnswer = encryptthis($row[7],$key);
+
+    foreach($studentIDArray as $StudentIndexNum){
+      $StudentIndexNum;
   
-  foreach($studentIDArray as $StudentIndexNum){
-    $StudentIndexNum;
-    $insertQuestion = "INSERT INTO questionoptions(examPaperID,questionNumber,lectureID,studentID,options,is_correct) VALUES('$PaperID','$questionumber_new','$lecID','$StudentIndexNum', '$options','$is_correct')";
-    $insertQuestion_run = mysqli_query($conn ,$insertQuestion);
-}
+      foreach($optionArray as $questionOptions){
+   
+        
+         
+  
+      if(decryptthis($questionOptions,$key) == decryptthis($theAnswer,$key)){
+         $is_correct = 1;
+      }else{
+          $is_correct = 0;
+      }
+      $insertQuestion = "INSERT INTO questionoptions(examPaperID,questionNumber,lectureID,studentID,options,is_correct) VALUES('$examPpaperID','$questioNumber','$lecID','$StudentIndexNum', '$questionOptions','$is_correct')";
+      $insertQuestion_run = mysqli_query($conn ,$insertQuestion);
+  
+        if ($insertQuestion_run) {
+    
+          continue;
+      } else {
+          echo die("Error occured !");
+      }
+  
+      }
+     
+        
+     }
+  }
+  
  
-}
-
-  
  }
 
 ?>
@@ -264,7 +306,20 @@ position: absolute;
           opacity: 0.7;
           color: red;
         }
-        #excelfile{
+       .navigateToUpload{
+        width:100%;
+       }
+       .stepTitle{
+        background-color: rgba(0, 232, 249, 0.252);
+        border-radius:15px;
+        padding: 15px;
+        font-size: 17px
+    }
+    .guideline{
+        margin: 2px 0px 2px 10px;
+        font-size: 15px
+    }
+    #excelfile{
       display: none;
     }
 
@@ -275,7 +330,21 @@ position: absolute;
     #excelfile_question_options{
       display: none;
     }
+    #examInforForm{
+       
+        text-align: center;
+        margin: 18px auto;
 
+    }
+    .examinforimage{
+        margin: 5px;
+     
+   
+    }
+    .maintitleMain{
+        margin: 10px;
+
+    }
 
 </style>
 <body>
@@ -305,18 +374,130 @@ Exams
 </button>
 </div>
 
-<?php 
-if($getdataaaa["status"] == 1)
-{
-  ?>
 
 <div class="containerrrrr" style="float: right; right: 293px; position: absolute; top:70px" >
 <a href="checkCurrentExam.php?examPaperID=<?php echo $getdataaaa['examPaperID'];?> & paperName=<?php echo $getdataaaa['paperName'];?>" class="btn btn-danger">Watch</a>
  
 </div>
-<?php
-}
-?>
+
+<div class="containerrrrr" style="float: right; right: 370px; position: absolute; top:70px" >
+<button type="button" class="btn btn-secondary" id="chekbowdropdown" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+Excel
+</button>
+</div>
+
+<!-- // excel file upload model -->
+
+
+
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+  <div class="modal-dialog" >
+    <div class="modal-content" >
+      <div class="modal-header" >
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Follow given guidelines</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body"  >
+       
+
+      <p class="stepTitle">Step 1</p>
+<center>
+<img src="../images/exampaperinfo.png" class="img-thumbnail examinforimage" alt="..."> </center>
+ 
+<p class="guideline">  <img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/> Put time hours in <b>A1 cell</b></p>
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/> Put time minutes in <b>B1 cell</b></p>
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/> Put password in <b>C1 cell</b></p>
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/> Put subject name in <b>D1 cell</b></p>
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/> Import excel file by pressing <b>'Import Excel'</b> button & upload</p>
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/>  Download the file after uploading</p>
+
+
+
+<!-- // upload the exam info -->
+<form action="addExamPpaer.php" method="post" enctype="multipart/form-data" id="examInforForm">
+    
+   
+          <input type = "file"   id="excelfile" accept=".xlsx"  name="excel" required>
+         <label for="excelfile" class="btn btn-primary"  >Import Excel</label>
+         <input type="submit" value="Upload" class="btn btn-success" name="uploadExcel" required>
+
+   
+ </form>
+ <a href="Questions.xlsx">Download</a>
+
+
+
+<!-- 
+<form action="uploadExamExcelFile.php" method="post">
+<input type="submit" value="Download" class="btn btn-success" name="export_excel"  >
+
+</form> -->
+
+
+
+<!-- // upload question -->
+
+<p class="stepTitle">Step 2</p>
+<center>
+<img src="../images/questionsPNG.PNG" class="img-thumbnail examinforimage" alt="..."> </center>
+ 
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/>Exam paper ID appears automatically in <b>A1 cell</b></p>
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/>Put question number in <b>B1 cell</b></p>
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/>Write the question in <b>C1 cell</b></p>
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/>Import excel quetion file by pressing <b>'Import Excel Question'</b> button & upload</p>
+
+<form action="addExamPpaer.php" method="post" enctype="multipart/form-data" id="examInforForm">
+       <input type = "file"   id="excelfile_question"  accept=".xlsx" name="excel_question" required>
+         <label for="excelfile_question" class="btn btn-primary"  >Import Excel Question</label>
+         <input type="submit" value="Upload question" class="btn btn-success" name="uploadExcel_question" required>
+   
+ </form>
+
+
+
+ <!-- // upload options -->
+
+
+ <p class="stepTitle">Step 3</p>
+<center>
+<img src="../images/optionspaper.PNG" class="img-thumbnail examinforimage" alt="..."> </center>
+ 
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/>Exam paper ID appears automatically in <b>A1 cell</b></p>
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/>Put question number in <b>B1 cell</b>(should be 5 question)</p>
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/>Write the options in <b>C1 cell</b> to <b>G1 cell</b>  </p>
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/>Copy & past the answer in <b>H1 cell</b></p>
+
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/>Import excel quetion file by pressing <b>'Import Excel options'</b> button & upload</p>
+
+
+
+
+<!-- add oprions -->
+<form action="addExamPpaer.php" method="post" enctype="multipart/form-data" id="examInforForm">
+        
+ <input type = "file"   id="excelfile_question_options"  accept=".xlsx" name="excel_question_options" required>
+<label for="excelfile_question_options" class="btn btn-primary"  >Import Excel options</label>
+<input type="submit" value="Upload options" class="btn btn-success" name="uploadExcel_question_options" required>
+
+</form>
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+ 
+      </div>
+    </div>
+  </div>
+</div>
+
+
+ 
+
+
+ 
 
 
 
@@ -428,9 +609,11 @@ if($getdataaaa["status"] == 1)
 
  
 <?php 
+
 if(mysqli_num_rows($sql_run) !== 0) {
  
  ?>
+ 
 <div class="container" style="width: 800px; margin-top: 70px;  border: 1px solid black;  padding: 15px;">
 <div class="header"  style="background-color: rgba(168, 168, 168, 0.325); padding: 10px; margin-bottom: 10px;">
 <center>
@@ -444,12 +627,13 @@ if(mysqli_num_rows($sql_run) !== 0) {
 </div>
  <?php
 
-}
+} 
 ?>
 
 <?php while($hetquestion = mysqli_fetch_assoc($sql_run))
 {
  ?>
+ 
 <h6><?php echo $hetquestion['questionNumber'];?> ) <?php echo decryptthis($hetquestion['questionText'],$key);?></h6>
   <?php 
   $question = $hetquestion['questionNumber'];
@@ -555,41 +739,10 @@ if(mysqli_num_rows($sql_run) !== 0) {
       </div>
       <div class="modal-footer">
 
-      <form action="addExamPpaer.php" method="post" enctype="multipart/form-data">
-        <p>Upload info of exam</p>
-         <img src=" " class="img-thumbnail" alt="...">
-          <input type = "file"   id="excelfile" accept=".xlsx"  name="excel" required>
-         <label for="excelfile" class="btn btn-success"  >Import Excel</label>
-         <input type="submit" value="Upload" class="btn btn-success" name="uploadExcel" required>
-   
- </form>
- 
+   <a href="uploadExamExcelFile.php" class="btn btn-warning navigateToUpload">Upload from excel file</a>
 
 
-
-<!-- /// add questions -->
-
- <form action="addExamPpaer.php" method="post" enctype="multipart/form-data">
-          <p>Upload questions of exam</p>
-
-         <img src=" " class="img-thumbnail" alt="...">
-          <input type = "file"   id="excelfile_question"  accept=".xlsx" name="excel_question" required>
-         <label for="excelfile_question" class="btn btn-success"  >Import Excel Question</label>
-         <input type="submit" value="Upload question" class="btn btn-success" name="uploadExcel_question" required>
-   
- </form>
-
-
-<!-- add oprions -->
- <form action="addExamPpaer.php" method="post" enctype="multipart/form-data">
- <p>Upload options of questions</p>
-
-         <img src=" " class="img-thumbnail" alt="...">
-          <input type = "file"   id="excelfile_question_options"  accept=".xlsx" name="excel_question_options" required>
-         <label for="excelfile_question_options" class="btn btn-success"  >Import Excel options</label>
-         <input type="submit" value="Upload options" class="btn btn-success" name="uploadExcel_question_options" required>
-   
- </form>
+     
 
 
 
