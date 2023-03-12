@@ -2,7 +2,7 @@
 
 include("databaseconn.php");
 session_start();
- 
+ error_reporting(0);
 require("sessionTime_paperTime.php");
 
 if(!isset($_SESSION['studentID'])){
@@ -21,48 +21,18 @@ $_SESSION['EXAM_PAPER_ID'] = $examPaperID;
 
 $examPaperName = $_GET['ExamPaperName'];
 if(isset($_POST["Import"])){
-		
- 
-		echo $filename=$_FILES["file"]["tmp_name"];
-		
- 
-		 if($_FILES["file"]["size"] > 0)
-		 {
- 
-		  	$file = fopen($filename, "r");
-	         while (($data = fgetcsv($file, 10000, ",")) !== FALSE)
-	         {
-	    
-	          //It wiil insert a row to our subject table from our csv file`
-	           $sql ="INSERT into employee(name,email,phone) values('$data[0]','$data[1]','$data[2]')";
-	         //we are using mysql_query function. it returns a resource on true else False on error
-	          $result = mysql_query( $sql, $conn );
-				if(! $result )
-				{
-					echo "<script type=\"text/javascript\">
-							alert(\"Invalid File:Please Upload CSV File.\");
-							window.location = \"index.php\"
-						</script>";
-				
-				}
- 
-	         }
-	         fclose($file);
-	         //throws a message if data successfully imported to mysql database from excel file
-	         echo "<script type=\"text/javascript\">
-						alert(\"CSV File has been successfully Imported.\");
-						window.location = \"index.php\"
-					</script>";
-	        
-			 
- 
-			 //close of connection
-			mysql_close($conn); 
-				
-		 	
-			
-		 }
+	 
 	}	 
+
+   //get encrypt and decript data
+
+   
+
+$selectquesry = "SELECT * FROM question where studentID='{$studentID}' AND examPaperID='$examPaperID' ";
+$selectquesry_run = mysqli_query($conn ,$selectquesry);
+$getSelectdata = mysqli_fetch_assoc($selectquesry_run);
+ 
+
 
 //get Total question
 $selectQuestionnew = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY questionNumber  ASC";
@@ -108,6 +78,13 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
      list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
      return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
      }
+
+     function decryptthissone($data, $newkey) {
+      $encryption_key = base64_decode($newkey);
+      list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
+      return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+      }
+
  
 
      
@@ -255,19 +232,7 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 <!-- //////////////////////////////////////////////////////////////////////////////// -->
 <div class="container maincontainerbox">
@@ -297,8 +262,20 @@ while($rows = mysqli_fetch_assoc($reandomSQL_run))
 
      ?>
        <div class="container whatisquestionbox">
+          
+        <p class="whatisquestionCSS"></b><?php echo $counter.' ) ';?> <?php 
+        
+        if($getSelectdata['uploadByExcelOrnot'] == 1){
+         echo decryptthis($rows['questionText'],$key);  
          
-        <p class="whatisquestionCSS"></b><?php echo $counter.' ) ';?> <?php echo decryptthis($rows['questionText'],$key) ?> </b></p>
+         }else{
+           echo decryptthissone($rows['questionText'],$newkey);  
+         
+         }
+
+        
+        
+        ?> </b></p>
 </div>
 
 
@@ -314,7 +291,16 @@ while($rows = mysqli_fetch_assoc($reandomSQL_run))
         {
          ?>
         <p>   <input type='text'  class="quesnumberValue" value=<?php echo $options['questionNumber']?>>  <input type="radio" id="theradiobutton"  name="<?php echo $options['questionNumber']?>"   <?php if ($options['studentGivenAn'] == 1) {
-            echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $options['optionID'];?>"  style="cursor: pointer;">  <?php echo decryptthis($options['options'],$key) ?> </p>
+            echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $options['optionID'];?>"  style="cursor: pointer;">  <?php
+            
+            if($getSelectdata['uploadByExcelOrnot'] == 1){
+               echo  decryptthis($options['options'],$key);     
+             }else{
+               echo decryptthis($options['options'],$keyee);     
+           
+             }            
+            
+            ?> </p>
    
 
 <?php

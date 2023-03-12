@@ -68,7 +68,7 @@ $choice = array();
 
 foreach($studentIDArray as $StudentIndexNum){
     $StudentIndexNum;
-    $insertQuesSQL = "INSERT INTO question(examPaperID,questionNumber,lectureID,studentID,questionText) VALUES ('{$examPaperID}','{$questionnumber}'  ,'{$lecID}','{$StudentIndexNum}','{$encryptedWhatIsQuestion}')";
+    $insertQuesSQL = "INSERT INTO question(examPaperID,questionNumber,lectureID,studentID,questionText,uploadByExcelOrnot) VALUES ('{$examPaperID}','{$questionnumber}'  ,'{$lecID}','{$StudentIndexNum}','{$encryptedWhatIsQuestion}','1')";
     $insertQuesSQL_run = mysqli_query($conn, $insertQuesSQL);
 }
 

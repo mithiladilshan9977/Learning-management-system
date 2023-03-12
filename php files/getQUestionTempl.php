@@ -18,11 +18,11 @@ while($startNumber <=$thenumberOfquestion) {
   
 <center> <h3 class="my-3">Add New Question</h3> </center>
  
- <div class="shwoemsshe"> </div>
 
  <div class="container"  style="width: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
 
  <label for=""><b>Question Number</b></label>
+
  <input type="number" name=""   class="form-control my-3 questionumber" style="width: 100px;" max="50" min="1" value="<?php echo $startNumber?>">
 
  <label for="" class="my-1"><b>What is the question ? </b></label>
@@ -58,6 +58,7 @@ while($startNumber <=$thenumberOfquestion) {
     <input type="text" class="form-control my-1 choice5" placeholder="Option for Choice 5 (if there)">
 
  </div>
+ <div class="shwoemsshe"> </div>
 
  <label for=""><b>Correct Choice Number</b></label>
  <input type="number" name="" id="" class="form-control mt-2 correctNumber" style="width: 100px;" min="1" max="5">
@@ -92,7 +93,7 @@ while($startNumber <=$thenumberOfquestion) {
     
 
 
-<script src="insertQestionsnew.js"></script>
+<script src="insertingQestions.js"></script>
 </body>
 </html>
 

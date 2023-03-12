@@ -28,7 +28,9 @@ if(isset($_SESSION['EXAM_PAPER_ID'])){
 
 
 
-
+$selectquesry = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$examID' ";
+    $selectquesry_run = mysqli_query($conn ,$selectquesry);
+    $getSelectdata = mysqli_fetch_assoc($selectquesry_run);
 
 
 
@@ -88,6 +90,12 @@ function encryptthis($data, $key) {
     return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
     }
 
+ 
+
+
+   
+      
+
 
  use PhpOffice\PhpSpreadsheet\Spreadsheet;
  use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -118,8 +126,9 @@ if (isset($_POST['uploadExcel'])) {
     $passowrd = $row[2];
     $papername = $row[3];
    
-    $newsqlInsert = "INSERT INTO examinformation (batchID , lecturID, subjectID, hoursnew,minutesnew,password,paperName) VALUES('$batchID','$lecID','$subjectID','$hours','$minutes','$passowrd','$papername')";
+    $newsqlInsert = "INSERT INTO examinformation (batchID , lecturID, subjectID, hoursnew,minutesnew,password,paperName,showGreenCorrect) VALUES('$batchID','$lecID','$subjectID','$hours','$minutes','$passowrd','$papername','1')";
     $newsqlInsert_run = mysqli_query($conn , $newsqlInsert);
+    
 
 
 
@@ -129,12 +138,16 @@ if (isset($_POST['uploadExcel'])) {
     if($newsqlInsert_run){
 
   echo "<script>alert('File uploaded successfully')</script>";
+ 
+
+
       
      }
-   $selectHigtVal = "SELECT MAX(examPaperID) as examPaperID_new FROM examinformation WHERE lecturID='{$lecID}'";
+   $selectHigtVal = "SELECT MAX(examPaperID) as examPaperID_new FROM examinformation";
     $selectHigtVal_run = mysqli_query($conn ,$selectHigtVal);
     $resultnew = mysqli_fetch_assoc($selectHigtVal_run);
-    echo $hightExamPaper = $resultnew['examPaperID_new'];
+      $hightExamPaper = $resultnew['examPaperID_new'];
+     
 
         //php composer excel
  require 'vendor/autoload.php';
@@ -145,7 +158,7 @@ if (isset($_POST['uploadExcel'])) {
  $writer = new Xlsx($spreadsheet);
  $writer->save('Questions.xlsx');
 
-
+ echo "<script>window.location.href='addExamPpaer.php'</script>";
 
  }  
  }
@@ -190,7 +203,12 @@ if (isset($_POST['uploadExcel_question'])) {
     $insertQuestion = "INSERT INTO question(examPaperID,questionNumber,lectureID,studentID,questionText) VALUES('$PaperID','$questionumber_new','$lecID','$StudentIndexNum', '$encrptedQuestion')";
     $insertQuestion_run = mysqli_query($conn ,$insertQuestion);
 }
- 
+
+if($insertQuestion_run ){
+  echo "<script>alert('Question file uploaded successfully')</script>";
+  echo "<script>window.location.href='addExamPpaer.php'</script>"; 
+}
+
 }
 
   
@@ -345,7 +363,24 @@ position: absolute;
         margin: 10px;
 
     }
+    #downloadicon{
+      width:30px ;
+        height:30px;
+         margin:5px ;
+         position:relative ;
+    }
 
+    #cirrecticon{
+      width:30px ;
+        height:30px;
+         margin-left:10px;
+         position:relative ;
+    }
+#startExamBTtn{
+  position:absolute;
+  left:0px;
+  margin-left:10px;
+}
 </style>
 <body>
 <?php include("innerpreloader.php");?>
@@ -401,7 +436,24 @@ Excel
       <div class="modal-body"  >
        
 
-      <p class="stepTitle">Step 1</p>
+      <p class="stepTitle">Step 1    
+    
+      <?php 
+
+      if($getdata['paperName'] !="")
+
+      {
+        ?>
+      <img src="../images/correcticon.png" id="cirrecticon" style=""/>
+
+
+<?php
+      }
+      
+      ?>
+    
+    
+    </p>
 <center>
 <img src="../images/exampaperinfo.png" class="img-thumbnail examinforimage" alt="..."> </center>
  
@@ -424,8 +476,25 @@ Excel
 
    
  </form>
- <a href="Questions.xlsx">Download</a>
 
+ <center>
+
+ <?php 
+      if($getdata['paperName'] != "")
+      {
+        ?>
+      <a href="./Questions.xlsx" download><img src="../images/downloadicon.png" id="downloadicon" style=""/></a>
+
+
+
+<?php
+      }
+      
+      ?>
+
+
+
+ </center>
 
 
 <!-- 
@@ -438,7 +507,22 @@ Excel
 
 <!-- // upload question -->
 
-<p class="stepTitle">Step 2</p>
+<p class="stepTitle">Step 2
+
+
+<?php  
+   
+    
+      if($getSelectdata['questionText'] !="")
+      {
+        ?>
+      <img src="../images/correcticon.png" id="cirrecticon" style=""/>
+
+        <?php
+      }
+      ?>
+
+</p>
 <center>
 <img src="../images/questionsPNG.PNG" class="img-thumbnail examinforimage" alt="..."> </center>
  
@@ -492,18 +576,7 @@ Excel
     </div>
   </div>
 </div>
-
-
  
-
-
- 
-
-
-
-
-
-
  
 <div class="dropdownmenu">
  
@@ -589,8 +662,9 @@ Excel
    {
     ?>  
     <center>
-      <h4 class="my-2">Make New Exam Paper !</h4>
-      <img src="../images/undraw_detailed_examination_re_ieui.svg" alt="" srcset="" style="width: 450px; height: 450px; margin-top: 80px;">
+      <img src="../images/undraw_detailed_examination_re_ieui.svg" alt="" srcset="" style="width: 350px; height: 350px; margin-top: 80px;">
+      <p class="" style="font-size:17px; margin-top:20px">Make New Exam Paper !</p>
+
     </center>
     <?php
    }else{
@@ -634,7 +708,20 @@ if(mysqli_num_rows($sql_run) !== 0) {
 {
  ?>
  
-<h6><?php echo $hetquestion['questionNumber'];?> ) <?php echo decryptthis($hetquestion['questionText'],$key);?></h6>
+<h6>
+  <?php echo $hetquestion['questionNumber'];?> ) <?php 
+if($getSelectdata['uploadByExcelOrnot'] == 1){
+echo decryptthis($hetquestion['questionText'],$key);  
+
+}else{
+  echo decryptthis($hetquestion['questionText'],$keyee);  
+
+}
+
+
+
+
+?></h6>
   <?php 
   $question = $hetquestion['questionNumber'];
   $selectoprion = "SELECT * FROM questionoptions WHERE questionNumber='$question' AND examPaperID='{$examID}'";
@@ -643,11 +730,26 @@ if(mysqli_num_rows($sql_run) !== 0) {
   for($s = 1 ; $s<=5 ;$s++)
   {
    ?>
- <p style="margin-left: 20px;"><?php $newtdaa = mysqli_fetch_assoc($selectoprion_run);
-       echo $s . '. ' . decryptthis($newtdaa['options'],$key); ?> <?php if ($newtdaa['is_correct'] == '1') { ?> 
+ <p style="margin-left: 20px;">
+ 
+ <?php $newtdaa = mysqli_fetch_assoc($selectoprion_run);
+
+  if($getSelectdata['uploadByExcelOrnot'] == 1){
+    echo $s . '. ' . decryptthis($newtdaa['options'],$key);     
+  }else{
+    echo $s . '. ' . decryptthis($newtdaa['options'],$keyee);     
+
+  }
+       
+       ?>
+        <?php if ($newtdaa['is_correct'] == '1')
+         { ?> 
        <img src="../images/correct_bb6njyhdw0rf.svg" alt="" srcset="" style="width: 20px; height: 20px;">
        
-       <?php }   ?>   </p>
+       <?php }   ?>  
+      
+      
+      </p>
    <?php
   }
   ?>
@@ -737,16 +839,7 @@ if(mysqli_num_rows($sql_run) !== 0) {
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-success" id="savebtn">Create Paper</button>
       </div>
-      <div class="modal-footer">
-
-   <a href="uploadExamExcelFile.php" class="btn btn-warning navigateToUpload">Upload from excel file</a>
-
-
-     
-
-
-
-    </div>
+      
 
     </div>
   </div>

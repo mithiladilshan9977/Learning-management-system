@@ -19,6 +19,7 @@ if(!isset($_SESSION['lectureID'])){
   $subjectID = $_SESSION['subjectID_new'];
 
 }
+
 $key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
 
 //ENCRYPT FUNCTION
@@ -39,6 +40,11 @@ function encryptthis($data, $key) {
 
   $examPaperID = $_GET['examPaperID'];
 $paperName = $_GET['paperName'];
+
+$selectquesry = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$paperName' ";
+    $selectquesry_run = mysqli_query($conn ,$selectquesry);
+    $getSelectdata = mysqli_fetch_assoc($selectquesry_run);
+
 $sqlone = "SELECT  *,COUNT(*) FROM question  WHERE question.examPaperID='$examPaperID' GROUP BY questionText HAVING COUNT(*) >1 ORDER BY questionNumber ASC";
 $sql_run = mysqli_query($conn, $sqlone);
 
@@ -95,8 +101,21 @@ $DpaetmentName = $getLecData['departmentName'];
 while($hetquestion = mysqli_fetch_assoc($sql_run))
 {
   ?>
-  <!-- ///////////////////////////////////////////////// -->
-<h6><?php echo $hetquestion['questionNumber'];?> ) <?php echo decryptthis($hetquestion['questionText'],$key);?></h6>
+  
+<h6><?php echo $hetquestion['questionNumber'];?> )
+
+<?php echo $hetquestion['questionNumber'];?> ) <?php 
+if($getSelectdata['uploadByExcelOrnot'] == 1){
+echo decryptthis($hetquestion['questionText'],$key);  
+
+}else{
+  echo decryptthis($hetquestion['questionText'],$keyee);  
+
+}
+
+?>
+
+</h6>
    <?php 
    $question = $hetquestion['questionNumber'];
    $selectoprion = "SELECT * FROM questionoptions WHERE questionNumber='$question' AND examPaperID='{$examPaperID}'";
@@ -108,7 +127,16 @@ while($hetquestion = mysqli_fetch_assoc($sql_run))
 
     <!-- ///////////////////////////////// -->
   <p style="margin-left: 20px;"><?php $newtdaa = mysqli_fetch_assoc($selectoprion_run);
-                       echo $s .'. '. decryptthis($newtdaa['options'],$key); ?>  <?php if ($newtdaa['is_correct'] == '1') { ?> 
+
+if($getSelectdata['uploadByExcelOrnot'] == 1){
+  echo $s . '. ' . decryptthis($newtdaa['options'],$key);     
+}else{
+  echo $s . '. ' . decryptthis($newtdaa['options'],$keyee);     
+
+}?> 
+                       
+                       
+                       <?php if ($newtdaa['is_correct'] == '1') { ?> 
                         <img src="../images/correct_bb6njyhdw0rf.svg" alt="" srcset="" style="width: 20px; height: 20px;">
                         
                         <?php }   ?></p>
