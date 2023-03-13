@@ -8,11 +8,10 @@ $(document).ready(function () {
         var timeInMinutes = $("#timeInMinutes").val();
         var closesPassword = $("#closesPassword").val();
         var repeatPassword = $("#repeatPassword").val();
+        var limitTo = $("#limiteTo").val();
 
-
-    
-
-        var data = "nameofpaper=" + nameofpaper + "&timeInHours=" + timeInHours + "&timeInMinutes=" + timeInMinutes + "&closesPassword=" + closesPassword + "&repeatPassword=" + repeatPassword;
+ 
+        var data = "nameofpaper=" + nameofpaper + "&timeInHours=" + timeInHours + "&timeInMinutes=" + timeInMinutes + "&closesPassword=" + closesPassword + "&repeatPassword=" + repeatPassword + "&limitTo="+limitTo;
 
         $.ajax({
             type: "POST",   

@@ -107,7 +107,9 @@ else
 <p style="font-size: 40px;"><?php echo $thFinelMarks = round(($numberofCorrectAnswers / $allQuestions) * 100);?> %</p>
 
 </div>
-<center> <p>Now you can log out from the system. <a href="student_logout.php">Log out</a></p>  </center>
+<center>
+   <a href = "seeTheAnswerdPaper.php?"  class="btn btn-success">See the paper</a> 
+<p>Now you can log out from the system. <a href="student_logout.php">Log out</a></p>  </center>
   
 </body>
 </html>

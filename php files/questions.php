@@ -46,15 +46,17 @@ $selectQuestion_runnew = mysqli_query($conn, $selectQuestionnew);
  $gettinewdatanew = mysqli_fetch_assoc($selectime_runnew);
  $examHours = $gettinewdatanew['hoursnew'];
  $examMunites = $gettinewdatanew['minutesnew'];
+ $limiteTo = $gettinewdatanew['limitTo'];
 
  
  $selectQuestionnew_second = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID'  ";
 $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
 
  $allQUestions_new =mysqli_num_rows($selectQuestion_runnew_second);
+ 
+ 
 
-
- $reandomSQL = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND() ";
+ $reandomSQL = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND()   LIMIT  $limiteTo  ";
  $reandomSQL_run = mysqli_query($conn, $reandomSQL);
  
   
@@ -676,6 +678,17 @@ $.ajax({
 
     },1000);
  </script>
+
+
+<script type="text/javascript">
+ window.addEventListener('beforeunload', function () {
+   event.preventDefault();
+   event.returnValue="";
+   
+   
+ })
+</script>
+
   <script src="vertical_question_form_replace.js"></script>
   
  <script src="finalpassword.js"></script>

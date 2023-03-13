@@ -22,6 +22,8 @@ $timeInHours = $_POST['timeInHours'];
 $timeInMinutes = $_POST['timeInMinutes'];
 $closesPassword = $_POST['closesPassword'];
 $repeatPassword = $_POST['repeatPassword'];
+$limiteToquestions = $_POST['limitTo'];
+
 
 if(empty($examName) || empty($timeInMinutes) || empty($closesPassword) || empty($repeatPassword)  )
 {
@@ -41,7 +43,7 @@ else if($closesPassword !==$repeatPassword)
   </div>';
 }else {
 
-  $insertSQL = "INSERT INTO examinformation (batchID,lecturID,subjectID,hoursnew,minutesnew,password,paperName)VALUES('$batchID','$lecID','$subjectID','$timeInHours','$timeInMinutes','$closesPassword','$examName')";
+  $insertSQL = "INSERT INTO examinformation (batchID,lecturID,subjectID,hoursnew,minutesnew,password,paperName,limitTo)VALUES('$batchID','$lecID','$subjectID','$timeInHours','$timeInMinutes','$closesPassword','$examName','$limiteToquestions')";
   $insertSQL_run = mysqli_query($conn, $insertSQL);
   
   if($insertSQL_run){

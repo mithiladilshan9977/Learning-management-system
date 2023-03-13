@@ -826,6 +826,8 @@ echo decryptthis($hetquestion['questionText'],$key);
        <label for="">Password (Repeat)</label>
        <input type="text" class="form-control my-2" placeholder="Repeat Password" id="repeatPassword" required>
 
+       <label for="">Limit to</label>
+       <input type="number" class="form-control my-2" placeholder="Questions limit" id="limiteTo" min="1" max="50" required>
 
        <label for="">Number Of Questions</label>
        <input type="number" name="" id="numberofuqestion" class="form-control my-2" min="1" max="50" placeholder="Number of Questions">
@@ -894,7 +896,7 @@ echo decryptthis($hetquestion['questionText'],$key);
   </script>
 
    <script src="loadNumberOfQuestionsnew.js"></script>  
-   <script src="examPaperInfromationnew.js"></script> 
+   <script src="examPaperInfromation.js"></script> 
    <script src="startExam.js"></script> 
 <script src="removepaper.js"></script>
 </body>
