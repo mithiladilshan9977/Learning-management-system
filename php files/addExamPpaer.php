@@ -125,8 +125,10 @@ if (isset($_POST['uploadExcel'])) {
     $minutes = $row[1];
     $passowrd = $row[2];
     $papername = $row[3];
+    $limiteTo = $row[4];
+
    
-    $newsqlInsert = "INSERT INTO examinformation (batchID , lecturID, subjectID, hoursnew,minutesnew,password,paperName,showGreenCorrect) VALUES('$batchID','$lecID','$subjectID','$hours','$minutes','$passowrd','$papername','1')";
+    $newsqlInsert = "INSERT INTO examinformation (batchID , lecturID, subjectID, hoursnew,minutesnew,password,paperName,showGreenCorrect,limitTo) VALUES('$batchID','$lecID','$subjectID','$hours','$minutes','$passowrd','$papername','1','$limiteTo')";
     $newsqlInsert_run = mysqli_query($conn , $newsqlInsert);
     
 
@@ -154,6 +156,8 @@ if (isset($_POST['uploadExcel'])) {
  $spreadsheet = new Spreadsheet();
  $activeWorksheet = $spreadsheet->getActiveSheet();
  $activeWorksheet->setCellValue('A1', $hightExamPaper);
+ $activeWorksheet->setCellValue('B1', '1');
+ $activeWorksheet->setCellValue('C1', 'Start write your questions from here');
  
  $writer = new Xlsx($spreadsheet);
  $writer->save('Questions.xlsx');
@@ -218,7 +222,9 @@ if($insertQuestion_run ){
 
 if (isset($_POST['uploadExcel_question_options'])) {
 
- 
+  $updateSQL = "UPDATE examinformation SET status='1' WHERE batchID='{$batchID}' AND lecturID='{$lecID}' AND subjectID='{$subjectID}'" ;
+  $updateSQL_run = mysqli_query($conn, $updateSQL);
+
   $filename = $_FILES['excel_question_options']['name'];
   $fileExtention = explode('.', $filename);
   $fileExtention = strtolower(end($fileExtention));
@@ -257,7 +263,6 @@ if (isset($_POST['uploadExcel_question_options'])) {
       foreach($optionArray as $questionOptions){
    
         
-         
   
       if(decryptthis($questionOptions,$key) == decryptthis($theAnswer,$key)){
          $is_correct = 1;
@@ -270,6 +275,7 @@ if (isset($_POST['uploadExcel_question_options'])) {
         if ($insertQuestion_run) {
     
           continue;
+          
       } else {
           echo die("Error occured !");
       }
@@ -381,6 +387,18 @@ position: absolute;
   left:0px;
   margin-left:10px;
 }
+#fileuplaodicon{
+  position: relative;
+}
+#questiouploadicon{
+  position: relative;
+
+}
+#optionsIconsshows{
+  position: relative;
+
+}
+ 
 </style>
 <body>
 <?php include("innerpreloader.php");?>
@@ -455,24 +473,27 @@ Excel
     
     </p>
 <center>
-<img src="../images/exampaperinfo.png" class="img-thumbnail examinforimage" alt="..."> </center>
+<img src="../images/examinformation.png" class="img-thumbnail examinforimage" alt="..."> </center>
  
 <p class="guideline">  <img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/> Put time hours in <b>A1 cell</b></p>
 <p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/> Put time minutes in <b>B1 cell</b></p>
 <p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/> Put password in <b>C1 cell</b></p>
 <p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/> Put subject name in <b>D1 cell</b></p>
+<p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/> Put number of questions you want to limit in <b>E1 cell</b></p>
 <p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/> Import excel file by pressing <b>'Import Excel'</b> button & upload</p>
 <p class="guideline"><img src="../images/guidLineCheck.png" style="width:20px ; height:20px; margin-right:10px"/>  Download the file after uploading</p>
 
 
+<center>
 
+    </center>
 <!-- // upload the exam info -->
 <form action="addExamPpaer.php" method="post" enctype="multipart/form-data" id="examInforForm">
     
    
-          <input type = "file"   id="excelfile" accept=".xlsx"  name="excel" required>
-         <label for="excelfile" class="btn btn-primary"  >Import Excel</label>
-         <input type="submit" value="Upload" class="btn btn-success" name="uploadExcel" required>
+  <input type = "file"   id="excelfile" accept=".xlsx"  name="excel" required>
+  <img src="../images/uploadDone.png" style="width:20px ; height:20px; right:10px" id="fileuplaodicon"/>     <label for="excelfile" class="btn btn-primary"  >Import Excel</label>
+            <input type="submit" value="Upload" class="btn btn-success" name="uploadExcel" required>
 
    
  </form>
@@ -533,7 +554,7 @@ Excel
 
 <form action="addExamPpaer.php" method="post" enctype="multipart/form-data" id="examInforForm">
        <input type = "file"   id="excelfile_question"  accept=".xlsx" name="excel_question" required>
-         <label for="excelfile_question" class="btn btn-primary"  >Import Excel Question</label>
+       <img src="../images/uploadDone.png" style="width:20px ; height:20px; right:10px" id="questiouploadicon"/>       <label for="excelfile_question" class="btn btn-primary"  >Import Excel Question</label>
          <input type="submit" value="Upload question" class="btn btn-success" name="uploadExcel_question" required>
    
  </form>
@@ -561,7 +582,7 @@ Excel
 <form action="addExamPpaer.php" method="post" enctype="multipart/form-data" id="examInforForm">
         
  <input type = "file"   id="excelfile_question_options"  accept=".xlsx" name="excel_question_options" required>
-<label for="excelfile_question_options" class="btn btn-primary"  >Import Excel options</label>
+ <img src="../images/uploadDone.png" style="width:20px ; height:20px; right:10px" id="optionsIconsshows"/>  <label for="excelfile_question_options" class="btn btn-primary"  >Import Excel options</label>
 <input type="submit" value="Upload options" class="btn btn-success" name="uploadExcel_question_options" required>
 
 </form>
@@ -837,9 +858,11 @@ echo decryptthis($hetquestion['questionText'],$key);
 
       </div>
       <div class="modal-footer">
-      <button type="button" class="btn btn-info" data-bs-dismiss="modal" id="startExamBTtn">Push</button>
+      <button type="button" class="btn btn-info" data-bs-dismiss="modal" id="startExamBTtn">Create</button>
+     <span class="startBtton"></span>
+    
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-success" id="savebtn">Create Paper</button>
+        <button type="button" class="btn btn-success" id="savebtn">Add info</button>
       </div>
       
 
@@ -850,6 +873,70 @@ echo decryptthis($hetquestion['questionText'],$key);
   
 
 </div>
+
+<script type="text/javascript">
+  
+  var theUpladoStatusIcon = document.getElementById("fileuplaodicon");
+  theUpladoStatusIcon.style.display ="none";
+  document.getElementById("excelfile").addEventListener("change", function(){
+ const reader = new FileReader();
+
+ reader.addEventListener("load", () =>{
+ localStorage.setItem("examPaperInfo", reader.result);
+ const getImageUrl = localStorage.getItem("examPaperInfo");
+  if(getImageUrl){
+    theUpladoStatusIcon.style.display ="inline-block";
+  }
+ });
+ reader.readAsDataURL(this.files[0])
+  });
+
+
+ 
+ 
+    </script>
+<script type="text/javascript">
+  //upload questions
+  var questionUploadIcon = document.getElementById("questiouploadicon");
+  questionUploadIcon.style.display ="none";
+
+  document.getElementById("excelfile_question").addEventListener("change", function(){
+    const reader = new FileReader();
+    reader.addEventListener("load", () =>{
+ localStorage.setItem("questionofpaper", reader.result);
+ const getImageUrlnew = localStorage.getItem("questionofpaper");
+  if(getImageUrlnew){
+    questionUploadIcon.style.display ="inline-block";
+  }
+ });
+ reader.readAsDataURL(this.files[0])
+  });
+  
+
+    </script>
+
+
+<script type="text/javascript">
+
+  //upload options
+  var optionsIconsshows = document.getElementById("optionsIconsshows");
+  optionsIconsshows.style.display ="none";
+
+  document.getElementById("excelfile_question_options").addEventListener("change", function(){
+    const reader = new FileReader();
+    reader.addEventListener("load", () =>{
+ localStorage.setItem("questionoptions", reader.result);
+ const getImageUrlnew = localStorage.getItem("questionoptions");
+  if(getImageUrlnew){
+    optionsIconsshows.style.display ="inline-block";
+  }
+ });
+ reader.readAsDataURL(this.files[0])
+  });
+  
+
+    </script>
+
 
 
 
@@ -895,8 +982,13 @@ echo decryptthis($hetquestion['questionText'],$key);
     });
   </script>
 
-   <script src="loadNumberOfQuestionsnew.js"></script>  
+
+
+   <script src="loadNumberOfQuestionsnew.js"></script> 
+   
+
    <script src="examPaperInfromation.js"></script> 
+   <script src="getStartButton_replace.js"></script> 
    <script src="startExam.js"></script> 
 <script src="removepaper.js"></script>
 </body>

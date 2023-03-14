@@ -47,6 +47,18 @@ $selectQuestion_runnew = mysqli_query($conn, $selectQuestionnew);
  $examHours = $gettinewdatanew['hoursnew'];
  $examMunites = $gettinewdatanew['minutesnew'];
  $limiteTo = $gettinewdatanew['limitTo'];
+ $exampaperName =  $gettinewdatanew['paperName'];
+ $lecID =  $gettinewdatanew['lecturID'];
+ $limiteNumber =  $gettinewdatanew['limitTo'];
+
+
+ $selectlectur = "SELECT * FROM lecture WHERE lectureID='{$lecID}'";
+ $selectlectur_run = mysqli_query($conn , $selectlectur);
+ $getlecdata = mysqli_fetch_assoc($selectlectur_run);
+ $Fnamelec =  $getlecdata['firstname'];
+ $Lnamelec =  $getlecdata['lastname'];
+
+
 
  
  $selectQuestionnew_second = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID'  ";
@@ -156,14 +168,16 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
       color: red;
      }
      .timmer{
-      position: absolute;
+      position: fixed;
       float: left;
       top: 10px;
-   padding: 10px 19px;
+ 
 
+   padding: 10px 19px;
+   border-radius: 15px;
       right: 10px;
-      background-color:rgba(192, 192, 192, 0.156);
-      border: 1px solid rgba(0, 0, 0, 0.956);
+      color: rgb(0, 27, 123);
+      background-color: rgba(0, 213, 255, 0.395) ;
      }
      .hswotheerror{
       color: red;
@@ -184,8 +198,11 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
      }
      .maincontainerbox{
       margin: 0px auto;
+      border: 2px solid rgba(0, 0, 0, 0.822);
       width: 70%;
-      padding: 10px;
+      margin-top: 38px;
+      border-radius: 15px;
+      padding: 15px;
     
      }
      .whatisquestionbox{
@@ -221,7 +238,11 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
      }
      .inforBox{
       display: flex;
+      background-color: rgba(186, 186, 186, 0.208) ;
       flex-direction:   column;
+    padding: 15px;
+    margin: 10px;
+    border-radius:15px;
       align-items: flex-start;
 
      }
@@ -243,11 +264,14 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
 
          
   </div>
-  
+ 
   <div class="modal-header  inforBox">
- <p>Conducted By : Prabath samarasignha</p>
- <p>Subject : Advaced databases</p>   
- <p>Time : 2.30 Hours</p>     
+ <p><b>Conducted By </b>: <?php echo  $Fnamelec .' '.  $Lnamelec?></p>
+ <p><b>Subject </b>:  <?php echo  $exampaperName ;?> MCQ paper</p>  
+ <p><b>Time </b>: <?php echo  $examHours .'.'. $examMunites  ?> Hours</p> 
+ <p>Answer all <?php echo   $limiteNumber ?> questions</p> 
+
+
 
    </div>
 
@@ -695,6 +719,6 @@ $.ajax({
 <script src="detectTabnew.js"></script>
 <script src="timmernew.js"></script>
 <script src="gobackwords.js"></script>
-<script src="studentAnswer.js"></script>
+<script src="studentAnswerNew.js"></script>
  
 </html>

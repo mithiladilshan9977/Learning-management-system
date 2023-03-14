@@ -19,6 +19,9 @@ if(!isset($_SESSION['studentID'])){
   $questione_number = $_POST['questionNumber_next']  ;
   $option_id = $_POST['optionID_next'];
 
+  if(!isset($_SESSION['STUDENT_GIVEN_ANSWERS'])){
+    $_SESSION['STUDENT_GIVEN_ANSWERS'] = 0;
+}
 
   $sqlectQuestion = "SELECT MAX(studentGivenAn) as studentGivenAn FROM questionoptions WHERE     studentID='{$studentID}' AND questionNumber='{$questione_number}'";
   $sqlectQuestion_run = mysqli_query($conn, $sqlectQuestion);
@@ -28,8 +31,25 @@ if(!isset($_SESSION['studentID'])){
 
     $updatetheSlected = "UPDATE questionoptions SET studentGivenAn=1 WHERE optionID='{$option_id}' AND studentID='{$studentID}' AND questionNumber='{$questione_number}'";
     $updatetheSlected_run = mysqli_query($conn, $updatetheSlected);
+ 
+
     if($updatetheSlected_run){
        
+      $getFullMarks = "SELECT * FROM questionoptions WHERE is_correct=1 AND studentGivenAn=1 AND studentID='$studentID'";
+      $getFullMarks_run = mysqli_query($conn, $getFullMarks);
+      $getdatanew = mysqli_fetch_assoc($getFullMarks_run);
+ if(isset($getdatanew )){
+  if($getdatanew['is_correct'] == 1 && $getdatanew['studentGivenAn']== 1 ){
+   
+       $_SESSION['STUDENT_GIVEN_ANSWERS'] = mysqli_num_rows($getFullMarks_run);
+    
+} else{
+ 
+}
+ }
+      
+
+
       echo "<small class='good'>Submitted<small>";
 
         }else{
@@ -46,6 +66,7 @@ if(!isset($_SESSION['studentID'])){
 
         $selectOptions = "SELECT * FROM questionoptions WHERE questionNumber='{$questione_number}'AND studentID='{$studentID}'  ";
         $selectOptions_run = mysqli_query($conn, $selectOptions);
+      
         $numberOfRows = mysqli_num_rows($selectOptions_run);
         
         for( $statringOptionNumber ;  $statringOptionNumber<=$numberOfRows;$statringOptionNumber++ ) {
@@ -57,6 +78,23 @@ if(!isset($_SESSION['studentID'])){
         $updatetheSlected_run_update = mysqli_query($conn, $updatetheSlected_update);
         if($updatetheSlected_run_update){
        
+
+          $getFullMarks = "SELECT * FROM questionoptions WHERE is_correct=1 AND studentGivenAn=1 AND studentID='$studentID'";
+          $getFullMarks_run = mysqli_query($conn, $getFullMarks);
+          $getdatanew = mysqli_fetch_assoc($getFullMarks_run);
+          if(isset($getdatanew)){
+            if($getdatanew['is_correct'] == 1 && $getdatanew['studentGivenAn']== 1 ){
+       
+                 $_SESSION['STUDENT_GIVEN_ANSWERS'] = mysqli_num_rows($getFullMarks_run);
+              
+          } else{
+         
+          }
+          }
+          
+
+
+
             echo "<small class='good'>Re-submitted<small>";
       
               }else{
@@ -64,6 +102,10 @@ if(!isset($_SESSION['studentID'])){
               echo "<small class='bad'>error<small>";
       
               }
+
+              
+
+              
 
   }
 

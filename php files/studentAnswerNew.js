@@ -4,7 +4,7 @@ $(document).ready(function () {
         e.preventDefault();
  var studentGivenAnswer  = $("input[name='question']:checked").val();
  
-      
+  
  var data ="studentGivenAnswer=" + studentGivenAnswer;
  
 

@@ -3,7 +3,7 @@
 
 include("databaseconn.php");
 session_start();
- 
+ error_reporting(0) ; 
 require("sessionTime_paperTime.php");
 
 if (!isset($_SESSION['studentID'])) {
@@ -57,8 +57,27 @@ $select_answer_1 = "SELECT * FROM  questionoptions WHERE examPaperID = '$examPap
 $select_answer_1_run = mysqli_query($conn, $select_answer_1);
  
 
+$selectimenew = "SELECT * FROM examinformation WHERE batchID='{$studentbatch}' AND subjectID='{$studentid}'";
+$selectime_runnew = mysqli_query($conn, $selectimenew);
+$gettinewdatanew = mysqli_fetch_assoc($selectime_runnew);
+$examHours = $gettinewdatanew['hoursnew'];
+$examMunites = $gettinewdatanew['minutesnew'];
+$limiteTo = $gettinewdatanew['limitTo'];
+$exampaperName =  $gettinewdatanew['paperName'];
+$lecID =  $gettinewdatanew['lecturID'];
+$limiteNumber =  $gettinewdatanew['limitTo'];
+
+$selectlectur = "SELECT * FROM lecture WHERE lectureID='{$lecID}'";
+$selectlectur_run = mysqli_query($conn , $selectlectur);
+$getlecdata = mysqli_fetch_assoc($selectlectur_run);
+$Fnamelec =  $getlecdata['firstname'];
+$Lnamelec =  $getlecdata['lastname'];
  
 
+
+$selectquesry = "SELECT * FROM question where studentID='{$studentID}' AND examPaperID='$examPaperID' ";
+$selectquesry_run = mysqli_query($conn ,$selectquesry);
+$getSelectdata = mysqli_fetch_assoc($selectquesry_run);
 
 ?>
 <!DOCTYPE html>
@@ -73,15 +92,18 @@ $select_answer_1_run = mysqli_query($conn, $select_answer_1);
 </head>
 <style>
     .mainholder{
-  
+     
         margin-top: 25px;
-        padding: 15px
-        border: 1px solid rgba(0, 0, 0, 0.564) ;
+        padding: 15px;
+        border-radius: 15px;
+        border: 2px solid rgba(0, 0, 0, 0.822);
+        
     }
     .whatisquestion{
         background-color:rgba(0, 204, 255, 0.286);
       border-radius: 10px;
       padding: 13px;
+
       margin: 7px 0px 0px 1px;
       font-size: 20px;
   
@@ -90,14 +112,38 @@ $select_answer_1_run = mysqli_query($conn, $select_answer_1);
   
       margin-left: 20px;
         padding: 15px;
+      margin-bottom: 5px;
  
    
     }
+    .campImage{
+      max-width: 150px;
+      min-height: 150px;
+      text-align:center;
+      margin: 0px auto;
+     }
+     .inforBox{
+      display: flex;
+      background-color: rgba(186, 186, 186, 0.208) ;
+      flex-direction:   column;
+    padding: 15px;
+    margin: 10px;
+    border-radius:15px;
+      align-items: flex-start;
+
+     }
+     .printntm{
+      margin:10px;
+     }
 </style>
 <body>
 <?php include("innerpreloader.php");?>
 
 <?php include("student_header.php")  ?>
+
+<button class="btn btn-success printntm" onclick="window.print()" >Print</button>
+ 
+ 
 
 
 
@@ -105,6 +151,23 @@ $select_answer_1_run = mysqli_query($conn, $select_answer_1);
 
 
 <div class="container mainholder" style="width:60%" >
+
+<div class="modal-header mainheader">
+         <img src="../images/camp.png" class="rounded float-start campImage"/>  
+
+         
+  </div>
+
+  <div class="modal-header  inforBox">
+ <p><b>Conducted By </b>: <?php echo  $Fnamelec .' '.  $Lnamelec?></p>
+ <p><b>Subject </b>:  <?php echo  $exampaperName ;?> MCQ paper</p>  
+ <p><b>Time </b>: <?php echo  $examHours .'.'. $examMunites  ?> Hours</p> 
+ <p>Answer all <?php echo   $limiteNumber ?> questions</p> 
+
+
+
+   </div>
+   
 
   <?php 
   $counter = 1; 
@@ -118,8 +181,18 @@ while($dater  = mysqli_fetch_assoc($select_answer_1_run)){
     $numberOfQuestions =  mysqli_num_rows($slect_1_questions_run);
     $quesNumber = $getqutiondata['questionNumber'];
  
- 
-  echo  '<h5 class="whatisquestion">'. $counter. ' ) '  .  decryptthis($getqutiondata['questionText'], $key) . '<br>' . '</h5>';
+ ?>
+         <h5 class="whatisquestion"><?php echo $counter .' ) ';?><?php 
+          if($getSelectdata['uploadByExcelOrnot'] == 1){
+            echo decryptthis($getqutiondata['questionText'],$key);  
+            
+            }else{
+              echo decryptthissone($getqutiondata['questionText'],$newkey);  
+            
+            }
+         ?></h5>
+ <?php
+  
   
  
 
@@ -130,7 +203,23 @@ while($dater  = mysqli_fetch_assoc($select_answer_1_run)){
    {
     if($datanew['is_correct'] == 1)
     {
-     echo '<span class="optiontext">'.'<u>'.decryptthis($datanew['options'], $key ).'</u>'.'</span>';
+      ?>
+                <span class="optiontext"><u>
+                  <?php 
+                  
+                  if($getSelectdata['uploadByExcelOrnot'] == 1){
+                    echo decryptthis($datanew['options'],$key);  
+                    
+                    }else{
+                      echo decryptthissone($datanew['options'],$newkey);  
+                    
+                    }
+
+                  ?>
+              
+                </u> </span>
+      <?php
+    
           if($datanew['studentGivenAn'] == $datanew['is_correct'])
           {?>
 
@@ -143,7 +232,23 @@ while($dater  = mysqli_fetch_assoc($select_answer_1_run)){
      continue;
 
     }
-     echo '<span class="optiontext">'.decryptthis($datanew['options'], $key ).'</span>' ;
+    ?>
+       <span class="optiontext">
+       <?php 
+                  
+                  if($getSelectdata['uploadByExcelOrnot'] == 1){
+                    echo decryptthis($datanew['options'],$key);  
+                    
+                    }else{
+                      echo decryptthissone($datanew['options'],$newkey);  
+                    
+                    }
+
+                  ?>
+
+       </span>
+    <?php
+     
 
      if($datanew['studentGivenAn'] == $datanew['is_correct']){
  
