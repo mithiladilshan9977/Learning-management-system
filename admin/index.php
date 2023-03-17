@@ -74,6 +74,10 @@ include("dbconection.php");
       text-align: center;
       background-color: rgb(182, 182, 182);
     }
+    .videowindow{
+      border-radius: 15px;
+  margin-top:10px;
+    }
 </style>
 <body>
   <?php  include("admin_preloader.php") ;?>
@@ -124,6 +128,9 @@ include("dbconection.php");
 
      <br>
     <button id="submitformee" class="btn btn-primary">Confirm</button>
+    <button   class="btn btn-success mt-2" onclick="startScan()">Scan QR</button>
+    <video id="preview" class="videowindow"></video>
+
  
     </div>
  </center>
@@ -132,9 +139,9 @@ include("dbconection.php");
  
  
      
- <div class="bottom">
+ <!-- <div class="bottom">
  Saegis Campus Copyright &copy; All rights reserved | Developed and maintain by <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Mithila dilshan</a> 
-    </div>
+    </div> -->
  
 
  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -167,6 +174,45 @@ include("dbconection.php");
   </div>
 </div>
  
+
+<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+ <script type="text/javascript">
+
+
+
+
+let scanner = new Instascan.Scanner({ 
+    video: document.getElementById('preview'), 
+    scanPeriod: 1, 
+    mirror: true 
+  });
+
+  scanner.addListener('scan', function (content) {
+    alert("QR code is detected");
+    document.getElementById("thepassword").value=content;
+    
+  });
+
+  
+function startScan() {
+  Instascan.Camera.getCameras().then(function (cameras) {
+    if (cameras.length > 0) {
+      scanner.start(cameras[0]);
+    } else {
+      alert("No cameras found.")
+      
+    }
+  }).catch(function (e) {
+    
+    console.error(e);
+  });
+
+}
+ 
+
+ 
+  </script> 
+
 <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
 <script>
   function addDarkmodeWidget() {
@@ -196,7 +242,7 @@ darkmode.showWidget();
  
 </script>
 
- 
+
  <script type="text/javascript" src="sendtheadmininfo_new.js"></script>
 
 

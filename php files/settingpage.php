@@ -41,8 +41,9 @@
 
    <h6 class="mb-2">Preferences</h6>
    <hr>
+ 
+   <a href="#" style="text-decoration: none; display:block"  data-bs-toggle="modal" data-bs-target="#exampleModal">Change Password</a>
 
-   <a href="" style="text-decoration: none;"  data-bs-toggle="modal" data-bs-target="#exampleModal">Change Password</a>
 
 
 
@@ -105,6 +106,7 @@ darkmode.showWidget();
 
  
 </script>
+
 <script src="checkcurrentpassword.js"></script>
 <script src="ckeckNewpassword.js"></script>
 <script src="updatenewPsss.js"></script>

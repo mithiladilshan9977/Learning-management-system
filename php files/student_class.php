@@ -279,7 +279,7 @@ echo "File extention failed";
 </head>
 <body>
 <?php include("innerpreloader.php");?>
-
+   
 <?php include("student_header.php")  ?>
 
 <?php include("student_naviga_bar.php")  ?>

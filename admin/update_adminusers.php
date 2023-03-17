@@ -13,7 +13,7 @@ if(!isset($_SESSION['username'] )){
      $email = $_GET['email'];
 
 
-
+ 
 ?>
 <?php 
 include("dbconection.php");
@@ -37,6 +37,7 @@ if(isset($_POST['updatesubjectinfo'])){
        echo "<script>window.location.href='adminusers.php'</script>";
     }
 }
+
 ?>
  
 <!DOCTYPE html>
@@ -46,7 +47,9 @@ if(isset($_POST['updatesubjectinfo'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <?php include("boostrapJquery.php"); ?>
-    <title>Document</title>
+    <link rel="shortcut icon" href="../images/camp.png" type="x-icon">
+    <title>Update admin</title>
+
     <style>
         *,*::after,*::before{
         padding: 0px;
@@ -110,13 +113,18 @@ if(isset($_POST['updatesubjectinfo'])){
 <input class="form-control inputfilesss" type="text" placeholder="Subject Code" value ="<?php echo $lastname; ?>"  aria-label="default input example" id=" " name="lastname">
 <br>
 <label for=""><b>Email address</b></label>
-<input class="form-control inputfilesss" type="text" placeholder="Subject Code" value ="<?php echo $email; ?>"  aria-label="default input example" id=" " name="email">
+<input class="form-control inputfilesss" type="text" placeholder="Email address" value ="<?php echo $email; ?>"  aria-label="default input example" id=" " name="email">
 <br>
 <input type="submit" value="Update"  name = "updatesubjectinfo" id=" " class="btn btn-success" >
 
+<a href="./qrcode.php" style="text-decoration: none;" class="btn btn-info" >Generate QR</a>
 
 </form>
+   
+ 
+
+
 <div>
-    
+
 </body>
 </html>
