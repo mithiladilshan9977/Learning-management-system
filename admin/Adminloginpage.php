@@ -153,7 +153,21 @@ if(isset($_POST['submit'])){
     #showdeparmnetsnewwww{
         display:none;
     }
-    
+    #genpassword{
+        display:inline-block;
+  
+        background-color: rgba(193, 193, 193, 0.693) ;
+        cursor: pointer;
+        padding:10px;
+        border-radius: 50%;
+
+    }
+    #thepassowrd{
+        display:inline-block;
+        width:91%;
+       
+
+    }
     @media(max-width:770px){
         .imagediv{
             display: none;
@@ -199,7 +213,6 @@ if(isset($_POST['submit'])){
                 <h3>Go - Xm Admin Registration</h3>
             </center>
 
-
             <form action="#" method="post">
          
             <div class=" ">
@@ -212,14 +225,15 @@ if(isset($_POST['submit'])){
             <label for="" class="lables"><b>Last name</b></label>
             <input class="form-control widthnew" type="text" placeholder="Last name *" aria-label="default input example" required name="lastname">
 <br>
-            <label for="" class="lables"><b>Password</b></label>
-            <input class="form-control widthnew" type="password" placeholder="Password *" aria-label="default input example" required name="password">
+            <label for="" class="lables" style="display:block"><b>Password</b></label>
+
+            <input class="form-control widthnew" type="text" placeholder="Password *" aria-label="default input example" required name="password" id="thepassowrd" onpaste="return false;" ondrop="return false">  <i class="fa-solid fa-unlock" onclick="getpassword()" id="genpassword"></i>            
 <br>
-            <label for="" class="lables"><b>Re-Enter password</b></label>
-            <input class="form-control widthnew" type="password" placeholder="Re-Enter Password *" aria-label="default input example" required name="reenterpassword">
+            <label for="" class="lables mt-3"><b>Re-Enter password</b></label>
+            <input class="form-control widthnew" type="text" placeholder="Re-Enter Password *" aria-label="default input example" required name="reenterpassword" onpaste="return false" ondrop="return false">
  <br>
             <label for="" class="lables"><b>Code</b></label>
-            <input class="form-control widthnew" type="text" placeholder="Input Secret Code *" aria-label="default input example" required name="code">
+            <input class="form-control widthnew" type="text" placeholder="Input Secret Code *" aria-label="default input example" required name="code" autocomplete="off">
             <br>
             <label for="" class="lables"><b>I am</b></label>
 
@@ -266,7 +280,22 @@ if(isset($_POST['submit'])){
 
 
 </div>
- 
+ <script>
+    function getpassword(){
+     
+        var chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890!@#$%^&*()/{}[]";
+        var passowrdLenght = 25;
+        var password ="";
+        for(var i =0 ; i <= passowrdLenght ;i ++){
+            var randomNumber = Math.floor(Math.random() * chars.length);
+            password +=  chars.substring(randomNumber ,randomNumber+1);
+        }
+    document.getElementById("thepassowrd").value=   password;
+        
+    }
+    </script>
+  
+
  <script type="text/javascript" src="Themainpreloader.js"></script>
   
  <script type="text/javascript" src="checktheperson.js"></script>

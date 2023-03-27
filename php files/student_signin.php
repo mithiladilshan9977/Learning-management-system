@@ -54,7 +54,15 @@ $query = mysqli_query($conn , $sql);
         position: relative;
         width: 100%;
     }
-
+    .thepasswordeye{
+      position: relative;
+    top: -31px;
+    right: -469px;
+    }
+    .thepasswordeye:hover{
+      cursor: pointer;
+    
+    }
     @media (max-width :650px){
       .imagediv{
         display: none;
@@ -75,6 +83,17 @@ $query = mysqli_query($conn , $sql);
         color: black;
         border-radius: 15px;
       }
+
+      .thepasswordeye{
+      position: relative;
+    top: -31px;
+    right: -424px;
+    }
+    .thepasswordeye:hover{
+      cursor: pointer;
+    
+    }
+
 
     }
         </style>
@@ -117,13 +136,14 @@ $query = mysqli_query($conn , $sql);
           
             </select>
             <br>
-    <input class="form-control" type="password" placeholder="Password" aria-label="default input example" id="password" required>
+    <input class="form-control" type="password" placeholder="Password" aria-label="default input example" id="password" required> <i class="fa-solid fa-eye thepasswordeye" id="eye"></i>
     <br>
     <input class="form-control" type="password" placeholder="Re-Enter password" aria-label="default input example" id="reenterpassword" required>
 <br>
       <button id="submit" class="btn btn-primary">Confirm</button>
+      
       <a href="../index.php?" class="btn btn-info">Have an account</a>
-      <b><p style="color: red; margin-top: 10px ;  "  class="thewaring">You have to get the permission from the Coordinater first.</p></b>
+      <b><p style="color: red; margin-top: 10px ;  "  class="thewaring">You have to get the permission from the Admin first.</p></b>
      
       </div>
       </div>
@@ -132,7 +152,20 @@ $query = mysqli_query($conn , $sql);
    
 
  
+    <script type="text/javascript">
+ 
+      var eye = document.getElementById("eye");
+      var password = document.getElementById("password");
+       
+      eye.addEventListener('click', function () {
+         password.setAttribute('type','text');
+         eye.classList.add("fa-regular fa-eye-slash");
+         eye.classList.remove("fa-solid fa-eye");
 
+
+
+      })
+    </script>
     <script src="studentsignin.js"></script>
 
 

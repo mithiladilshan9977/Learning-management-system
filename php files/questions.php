@@ -2,7 +2,7 @@
 
 include("databaseconn.php");
 session_start();
- error_reporting(0);
+ 
 require("sessionTime_paperTime.php");
 
 if(!isset($_SESSION['studentID'])){
@@ -64,18 +64,74 @@ $selectQuestion_runnew = mysqli_query($conn, $selectQuestionnew);
  $selectQuestionnew_second = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID'  ";
 $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
 
+
  $allQUestions_new =mysqli_num_rows($selectQuestion_runnew_second);
  
  
 
- $reandomSQL = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND()   LIMIT  $limiteTo  ";
+ $reandomSQL = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND()   LIMIT  $limiteTo";
  $reandomSQL_run = mysqli_query($conn, $reandomSQL);
+ $endNumber = mysqli_num_rows($reandomSQL_run);
+
+//checking is it alredy inserted // remove refresh
+$refrechSelect = "SELECT * FROM questionselected WHERE examPaperID='$examPaperID' AND studentID='$studentID'";
+$refrechSelect_run = mysqli_query($conn , $refrechSelect);
+$numberforows = mysqli_num_rows($refrechSelect_run);
  
+
+ if($reandomSQL_run){
+ 
+   if($numberforows == $limiteTo){
+
+   }else{
+      for($s = 1 ; $s <=$endNumber ; $s++){
+         $questionData = mysqli_fetch_assoc($reandomSQL_run) ;
+           $questionNumber = $questionData['questionNumber'];
+           $theQuestionText = $questionData['questionText'];
+   
+         $InsertSelectedQuestions = "INSERT INTO questionselected (examPaperID,questionNumber,LecID,studentID,questionText) VALUES('$examPaperID' , '$questionNumber','$lecID','$studentID', '$theQuestionText')";
+         $InsertSelectedQuestions_run = mysqli_query($conn , $InsertSelectedQuestions);
+         if( $InsertSelectedQuestions_run){
+           
+            continue;
+         }else{
+            echo "Somthing went wrong";
+         }
+      }
+   }
+
   
 
+ }
+ $selectNotChangeQuestion = "SELECT * FROM questionselected WHERE examPaperID='$examPaperID' AND studentID='$studentID'";
+ $selectNotChangeQuestion_run = mysqli_query($conn , $selectNotChangeQuestion);
 
+ //creating button to navigate
+ $buttonToNavigate = "SELECT * FROM questionselected WHERE examPaperID='$examPaperID' AND studentID='$studentID'  ";
+ $buttonToNavigate_run = mysqli_query($conn , $buttonToNavigate);
+ 
+ 
+ $counternew = 1;
+ while( $getButtonData = mysqli_fetch_assoc($buttonToNavigate_run))
+ {
+   ?>
+   
+   <span class="container buttonHolder">
+   <input type="text"   class="inputNumberField" value="<?php echo $getButtonData['questionNumber'] ; ?>">
+   <span class="container buttoonOuterHolder">
+               <button class="btn btn-info navigateButton"><?php echo $counternew; ?></button>
 
+               </span>
+ </span>
 
+   <?php
+   $counternew ++ ;  
+ }
+  
+
+ 
+
+ 
  $key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
 
  //ENCRYPT FUNCTION
@@ -122,6 +178,14 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
         padding: 0px;
         margin: 0px;
         box-sizing: border-box;
+     }
+     .buttonHolder{
+      
+          
+     }
+    
+     .inputNumberField{
+      display: none;
      }
      .questiontitile{
         font-size: 30px;
@@ -197,12 +261,15 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
        display: none;
      }
      .maincontainerbox{
-      margin: 0px auto;
+ 
       border: 2px solid rgba(0, 0, 0, 0.822);
-      width: 70%;
-      margin-top: 38px;
+ 
+      height:700px;
+      
+      margin-top: 50px;
       border-radius: 15px;
       padding: 15px;
+      overflow: hidden;
     
      }
      .whatisquestionbox{
@@ -218,6 +285,7 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
      .optionsBox{
       padding: 10px 0px 0px 20px;
       font-size: 18px;
+      margin-bottom: 150px;
 
      }
      body{
@@ -246,6 +314,25 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
       align-items: flex-start;
 
      }
+     ::-webkit-scrollbar {
+  width: 15px; /* width of the scrollbar */
+  height: 5px; /* height of the scrollbar */
+}
+
+/* Define the style for the scrollbar track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* color of the scrollbar track */
+}
+
+/* Define the style for the scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(rgba(0, 213, 255, 0),rgb(0, 171, 206)); /* color of the scrollbar thumb */
+  border-radius: 5px; /* rounded corners */
+}
+::-webkit-scrollbar-thumb :hover{
+   cursor: pointer;
+   
+}
 </style> 
 <body>
 <?php include("innerpreloader.php");?>
@@ -258,7 +345,7 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
  
 
 <!-- //////////////////////////////////////////////////////////////////////////////// -->
-<div class="container maincontainerbox">
+<div class="container maincontainerbox" style="width:70% ;   float: left; margin-left: 55px;">
 <div class="modal-header mainheader">
          <img src="../images/camp.png" class="rounded float-start campImage"/>  
 
@@ -275,19 +362,20 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
 
    </div>
 
-    
+   <span class="addquestion"> </span>  
 <?php 
  
  
 
 $counter = 1;
-while($rows = mysqli_fetch_assoc($reandomSQL_run))
+while($rows = mysqli_fetch_assoc($selectNotChangeQuestion_run))
 {  
      
     
 
      ?>
        <div class="container whatisquestionbox">
+        
           
         <p class="whatisquestionCSS"></b><?php echo $counter.' ) ';?> <?php 
         
@@ -308,8 +396,11 @@ while($rows = mysqli_fetch_assoc($reandomSQL_run))
 
         
          <div class="container optionsBox">
-         <?php      $quesnumbr = $rows['questionNumber'] ; 
-
+         <?php    
+        
+         
+         $quesnumbr = $rows['questionNumber'] ; 
+                   
         $selectoptions_randowm = "SELECT * FROM questionoptions WHERE questionNumber='$quesnumbr' AND  examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND() ";
         $selectoptions_random_run = mysqli_query($conn, $selectoptions_randowm);
 
@@ -503,6 +594,9 @@ if($questioNumberjumping == $allQUestions_new)
 
 ?>
 <!-- //////////////// for singel navigation -->
+
+
+
 
 <?php 
 if(isset($_GET['number']))
@@ -714,7 +808,7 @@ $.ajax({
 </script>
 
   <script src="vertical_question_form_replace.js"></script>
-  
+  <script src="getSingelQuestionSecond.js"></script>
  <script src="finalpassword.js"></script>
 <script src="detectTabnew.js"></script>
 <script src="timmernew.js"></script>
