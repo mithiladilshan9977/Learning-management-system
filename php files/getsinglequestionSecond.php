@@ -1,3 +1,30 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+</head>
+<style>
+     
+
+</style>
+<body>
+<script src="finalpassword.js"></script>
+<script src="detectTabnew.js"></script>
+ 
+<!-- <script src="gobackwords.js"></script> -->
+ 
+<script src="vertical_question_form_replace.js"></script>
+     
+</body>
+</html>
+
+
 <?php 
 
 include("databaseconn.php");
@@ -38,6 +65,8 @@ function encryptthis($data, $key) {
 
      
  $questioNu = $_POST['questionnumber_next'];
+ $counter = $_POST['counterval_next'];
+
  $examPaperID = $_SESSION['EXAM_PAPER_ID'];
 
  $selectquesry = "SELECT * FROM question where studentID='{$studentID}' AND examPaperID='$examPaperID' ";
@@ -55,7 +84,7 @@ $getSelectdata = mysqli_fetch_assoc($selectquesry_run);
  
  
 
-$counter = 1;
+ 
 while($rows = mysqli_fetch_assoc($selectNotChangeQuestion_run))
 {  
      
@@ -115,31 +144,9 @@ while($rows = mysqli_fetch_assoc($selectNotChangeQuestion_run))
       </div>
    
 <?php
-   $counter ++ ;  
+ 
 }
 
 ?>
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<style>
-     
-
-</style>
-<body>
-<script src="finalpassword.js"></script>
-<script src="detectTabnew.js"></script>
-<script src="timmernew.js"></script>
-<script src="gobackwords.js"></script>
-<script src="studentAnswerNew.js"></script>
-<script src="vertical_question_form_replace.js"></script>
-     
-</body>
-</html>

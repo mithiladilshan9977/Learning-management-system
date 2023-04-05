@@ -23,7 +23,11 @@ $selectexam_runquestions = mysqli_query($conn, $selectexamquestion);
 $oprionsdelete = "DELETE  FROM questionoptions WHERE examPaperID='{$examID}'";
 $oprion_run = mysqli_query($conn, $oprionsdelete);
 
-if($oprion_run == true)
+$removeselectedQUestions = "DELETE  FROM questionselected WHERE examPaperID='{$examID}'";
+$removeselectedQUestions_run = mysqli_query($conn, $removeselectedQUestions);
+
+
+if($removeselectedQUestions_run == true)
 {
     echo '<script>swal("REMOVED", "Good Work !") 
     setTimeout(goback , 1000);

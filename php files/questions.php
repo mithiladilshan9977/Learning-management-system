@@ -20,9 +20,7 @@ $examPaperID = $_GET['ExamPaperID'];
 $_SESSION['EXAM_PAPER_ID'] = $examPaperID;
 
 $examPaperName = $_GET['ExamPaperName'];
-if(isset($_POST["Import"])){
-	 
-	}	 
+  
 
    //get encrypt and decript data
 
@@ -82,7 +80,7 @@ $numberforows = mysqli_num_rows($refrechSelect_run);
  if($reandomSQL_run){
  
    if($numberforows == $limiteTo){
-
+ 
    }else{
       for($s = 1 ; $s <=$endNumber ; $s++){
          $questionData = mysqli_fetch_assoc($reandomSQL_run) ;
@@ -110,23 +108,34 @@ $numberforows = mysqli_num_rows($refrechSelect_run);
  $buttonToNavigate = "SELECT * FROM questionselected WHERE examPaperID='$examPaperID' AND studentID='$studentID'  ";
  $buttonToNavigate_run = mysqli_query($conn , $buttonToNavigate);
  
- 
+ ?>
+<div class="container ouertButtonHolder">
+ <?php
  $counternew = 1;
  while( $getButtonData = mysqli_fetch_assoc($buttonToNavigate_run))
  {
    ?>
    
-   <span class="container buttonHolder">
-   <input type="text"   class="inputNumberField" value="<?php echo $getButtonData['questionNumber'] ; ?>">
+   <div class="container buttonHolder">
+   <input type="hidden"   class="inputNumberField" value="<?php echo $getButtonData['questionNumber'] ; ?>">
+   <input type="hidden"   class="inputFieldCounter" value="<?php echo $counternew  ; ?>">
+
    <span class="container buttoonOuterHolder">
-               <button class="btn btn-info navigateButton"><?php echo $counternew; ?></button>
+                       
+               <button class="navigateButton"><?php echo $counternew; ?>
+               <span class="greenisonholder"></span>  
+            
+</button>
 
                </span>
- </span>
+ </div>
 
    <?php
    $counternew ++ ;  
  }
+ ?>
+ </div>
+ <?php
   
 
  
@@ -179,13 +188,52 @@ $numberforows = mysqli_num_rows($refrechSelect_run);
         margin: 0px;
         box-sizing: border-box;
      }
+     
+    
+     .ouertButtonHolder{
+      position: relative ;
+ 
+  width:27%;
+  float:right;
+  top:300px;
+  margin-right: 1px;
+  z-index: 100;
+  flex-wrap: wrap;
+ display: flex;
+  
+     }
+     .navigateButton{
+      display:inline-block;
+      width:50px;
+      height: 50px;
+      margin:5px;
+      border-radius:50%;
+      background-color: blue;
+      color:white;
+      border:none;
+     }
      .buttonHolder{
-      
-          
+      display: inline-block;
+      width:20%;
+ 
+      float: left;
      }
     
      .inputNumberField{
       display: none;
+      width: 1%;
+      background-color: red;
+      position: relative;
+      margin-top: 250px;
+      color:white;
+      height:1%;
+     }
+     .inputFieldCounter{
+        display: none;
+        width: 1%;
+        
+      color:white;
+      height:1%;
      }
      .questiontitile{
         font-size: 30px;
@@ -244,7 +292,27 @@ $numberforows = mysqli_num_rows($refrechSelect_run);
       background-color: rgba(0, 213, 255, 0.395) ;
      }
      .hswotheerror{
-      color: red;
+ 
+    
+      width:100%;
+      height:120vh;
+ 
+      top:5px;
+ 
+ 
+   
+     }
+     .showtheErrorText{
+      text-align: center;
+  font-size: 25px;
+  margin-top: 50px;
+  position: absolute;
+  color: rgb(184, 0, 0);
+     }
+     #mainouterErrorDiv{
+      width:100%;
+
+      background-color: rgba(255, 0, 0, 0.922);
      }
      .numberboxsx{
       width: 50px; height: 50px;   border: 1px solid blue; border-radius: 10px; padding: 10px; display: inline-block; position: relative; margin: 1px;
@@ -265,8 +333,8 @@ $numberforows = mysqli_num_rows($refrechSelect_run);
       border: 2px solid rgba(0, 0, 0, 0.822);
  
       height:700px;
-      
-      margin-top: 50px;
+
+ 
       border-radius: 15px;
       padding: 15px;
       overflow: hidden;
@@ -333,8 +401,16 @@ $numberforows = mysqli_num_rows($refrechSelect_run);
    cursor: pointer;
    
 }
+.endpaperBUtton{
+   position: fixed;
+   bottom: 10px;
+   right:10px;
+}
+.name{
+   background-color: rgba(255, 0, 0, 0.122);
+}
 </style> 
-<body>
+<body class="body">
 <?php include("innerpreloader.php");?>
 
 <div id="response"> </div>
@@ -345,10 +421,11 @@ $numberforows = mysqli_num_rows($refrechSelect_run);
  
 
 <!-- //////////////////////////////////////////////////////////////////////////////// -->
-<div class="container maincontainerbox" style="width:70% ;   float: left; margin-left: 55px;">
+<div class="container maincontainerbox" style="width:70% ;   float: left; margin-left: 55px; top:-90px;position: relative;">
 <div class="modal-header mainheader">
-         <img src="../images/camp.png" class="rounded float-start campImage"/>  
 
+         <img src="../images/camp.png" class="rounded float-start campImage"/>  
+<p class="showtheErrorText"></p>
          
   </div>
  
@@ -396,6 +473,7 @@ while($rows = mysqli_fetch_assoc($selectNotChangeQuestion_run))
 
         
          <div class="container optionsBox">
+            
          <?php    
         
          
@@ -435,27 +513,32 @@ while($rows = mysqli_fetch_assoc($selectNotChangeQuestion_run))
 
 </div>
 
+<a href="" class="btn btn-outline-danger endpaperBUtton" data-bs-toggle="modal" data-bs-target="#exampleModal">End Paper</a>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+   <div class="showmessage"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Password is needed</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <input type="text" class="form-control" placeholder="Enter Exam Password" id="passwordinput"> 
+      </div>
+      <p class="mt-1" style="margin-left: 18px;">This should be done. Otherwise marks will not be added !</p>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="okbtn">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 
             <input type="hidden" value="<?php echo $examHours + 1?>" id="setHours">
@@ -465,297 +548,21 @@ while($rows = mysqli_fetch_assoc($selectNotChangeQuestion_run))
 
                  
 
-<div class=" " style="border-bottom: 1px solid black; width: 100%; padding: 10px;">
-    <h3 class="my-2" style="margin-left: 10px; margin-top: 10px;  display: inline-block;"><?php echo $examPaperName; ?> Online Paper</h3>  <h6 class="hswotheerror" style="display: inline-block; margin-left: 30px;  "></h6>
-    <div class="timmer">
-    
+<div class=""  id=" ">
 
+      <h6 class="hswotheerror">
+
+       
+      </h6>
+    <div class="timmer"> </div>
    
-    </div>
-   
-</div>
-
-<?php 
- if(isset($_GET['questionNumber']))
- {
-
- 
-     $questonnumberid = $_GET['questionNumber'];
-   $jump_nav_next_question = $questonnumberid + 1;
-   $nump_go_back_question = $questonnumberid - 1;
- $selectQuestionjumping = "SELECT * FROM question WHERE questionNumber='$questonnumberid' AND examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND() ";
- $selectQuestion_runjumping = mysqli_query($conn, $selectQuestionjumping);
- 
- 
- $getquestionjumping = mysqli_fetch_assoc($selectQuestion_runjumping);
-
-   $namejumping = $getquestionjumping['questionText'];
-   $questioNumberjumping = $getquestionjumping['questionNumber'];
-
-   $selectoptions_jump = "SELECT * FROM questionoptions WHERE questionNumber='$questioNumberjumping' AND  examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND() ";
-$selectoptions_run_jump = mysqli_query($conn, $selectoptions_jump);
-
- 
- ?>
-<div class="container" style="margin-top: 20px; width: 700px; padding: 20px; background-color: transparent; border: 2px dotted black; border-radius: 10px;">
-
-<p class="my-2 questiontitile"  > <img src="../images/question_3ib9br6sq5ku.svg" alt="" srcset="" style="width: 38px; height: 38px; margin-right: 15px;"> Questions <?php echo $questioNumberjumping;?> of <?php echo  $allQUestions?></p>
-</div>
-
-
-
-
-
-
-
-<!-- jumping option question -->
-<div class="container outerdiv" style="width: 650px; margin-top: 15px; position: relative;">
-<b><p class="whatisquestion" style="margin: 10px;"><?php echo $questioNumberjumping.') ' . decryptthis($namejumping,$key) ;
-?></p></b>
-<?php 
-while($datanewneww = mysqli_fetch_assoc($selectoptions_run_jump))
-{
-    ?>
-    <div class="questionHolder">
-        
-<input type="radio" name="question"  <?php if ($datanewneww['studentGivenAn'] == 1) {
-            echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $datanewneww['optionID'];?>"  style="cursor: pointer;"> <p class="optionText"> <?php echo decryptthis($datanewneww['options'],$key); ?></p>  
-</div>
-    <?php
-}
-
-?>
-
-
-<?php 
-
-if($questioNumberjumping >=2)
-{
-    ?>
-    <a href="questions.php?questionNumber=<?php echo $nump_go_back_question;?> & ExamPaperID=<?php echo $examPaperID?> & ExamPaperName=<?php echo $examPaperName?>"  class="moveingbtns"><img src="../images/backward_arrow_t9553ymrahtf.svg"   alt="" srcset="" class="backwordarrow"></a>
-    
-    <?php
-}
- 
-if($questioNumberjumping < $allQUestions_new)
-
-{
-    ?>
-<a href="questions.php?questionNumber=<?php echo $jump_nav_next_question;?> & ExamPaperID=<?php echo $examPaperID?> & ExamPaperName=<?php echo $examPaperName?>"  class="moveingbtns"><img src="../images/backward_arrow_t9553ymrahtf.svg"   alt="" srcset="" class="forwclass"> </a>
-    <?php
-}
-?>
-<div class="btnholder" style="  position: absolute; right: 10px;">
-         <small class="showeeeror" style="position: absolute; right: 10px; bottom: 40px;"></small>
- <button class="btn btn-outline-success submitStudentAnser" style=" position: relative; right: 10px; " id="">Submit Answer</button>
-<?php 
-if($questioNumberjumping == $allQUestions_new)
-{
-   ?>
-<a href="" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">End Paper</a>
-
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-   <div class="showmessage"></div>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Password is needed</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-         <input type="text" class="form-control" placeholder="Enter Exam Password" id="passwordinput"> 
-      </div>
-      <p class="mt-1" style="margin-left: 18px;">This should be done. Otherwise marks will not be added !</p>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="okbtn">Ok</button>
-      </div>
-    </div>
-  </div>
 </div>
  
- 
- 
-   <?php
-}
-
-?>
-
-</div>
-</div>  
- 
-
- <?php
-  }
-
-
-
-
-?>
-<!-- //////////////// for singel navigation -->
-
-
-
-
-<?php 
-if(isset($_GET['number']))
-
-{    $statringNumber =  $_GET['number'];
-   $nextNumber = $statringNumber + 1;
-   $previoueNumber = $statringNumber - 1;
-   
-   $selectQuestion = "SELECT * FROM question WHERE questionNumber='$statringNumber' AND examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND()";
-   $selectQuestion_run = mysqli_query($conn, $selectQuestion);
-   
-   $getquestion = mysqli_fetch_assoc($selectQuestion_run);
-   $name = $getquestion['questionText'];
-   $questioNumber = $getquestion['questionNumber'];
-   $_SESSION['QESTIONNUMBER'] = $questioNumber;
-   
-   
-   //options
-   
-   $selectoptions = "SELECT * FROM questionoptions WHERE questionNumber='$statringNumber' AND  examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND()";
-   $selectoptions_run = mysqli_query($conn, $selectoptions);
-   ?>
-
-<div class="container" style="margin-top: 20px; width: 700px; padding: 20px; background-color: transparent; border: 2px dotted black; border-radius: 10px;">
-
-<p class="my-2 questiontitile"  > <img src="../images/question_3ib9br6sq5ku.svg" alt="" srcset="" style="width: 38px; height: 38px; margin-right: 15px;"> Questions <?php echo $questioNumber;?> of <?php echo  $allQUestions?></p>
-</div>
-
-
-<!-- //////////////////////////////////////////////////////////////// -->
-<div class="container outerdiv" style="width: 650px; margin-top: 15px; position: relative;">
-<b><p class="whatisquestion" style="margin: 10px;"><?php echo $questioNumber.') ' . decryptthis($name,$key) ;
-?></p></b>
-<?php 
-while($datanew = mysqli_fetch_assoc($selectoptions_run))
-{
-    ?>
-    <div class="questionHolder">
-        
-<input type="radio" name="question" required  <?php if ($datanew['studentGivenAn'] == 1) {
-            echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $datanew['optionID'];?>"  style="cursor: pointer;"> <p class="optionText"> <?php echo decryptthis($datanew['options'],$key); ?></p>  
-</div>
-    <?php
-}
-
-?>
-
-
-<?php 
-
-if($nextNumber > 2)
-{
-    ?>
-    <a href="questions.php?number=<?php echo $previoueNumber?> & ExamPaperID=<?php echo $examPaperID?> & ExamPaperName=<?php echo $examPaperName?>"  class="moveingbtns"><img src="../images/backward_arrow_t9553ymrahtf.svg"   alt="" srcset="" class="backwordarrow"></a>
-    
-    <?php
-}
- 
-if($nextNumber !==($allQUestions + 1))
-{
-    ?>
-<a href="questions.php?number=<?php echo $nextNumber?> & ExamPaperID=<?php echo $examPaperID?> & ExamPaperName=<?php echo $examPaperName?>"  class="moveingbtns"><img src="../images/backward_arrow_t9553ymrahtf.svg"   alt="" srcset="" class="forwclass"> </a>
-    <?php
-}
-?>
-<div class="btnholder" style="  position: absolute; right: 10px;">
-         <small class="showeeeror" style="position: absolute; right: 10px; bottom: 40px;"></small>
- <button class="btn btn-outline-success submitStudentAnser" style=" position: relative; right: 10px; " id="">Submit Answer</button>
-<?php 
-if($nextNumber > $allQUestions)
-{
-   ?>
-<a href="" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">End Paper</a>
-
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-   <div class="showmessage"></div>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Password is needed</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-         <input type="text" class="form-control" placeholder="Enter Exam Password" id="passwordinput"> 
-      </div>
-      <p class="mt-1" style="margin-left: 18px;">This should be done. Otherwise marks will not be added !</p>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="okbtn">Ok</button>
-      </div>
-    </div>
-  </div>
-</div>
- 
- 
- 
-   <?php
-}
-
-?>
-
-</div>
-</div>  
-
-
-
-<?php
-}
-
-?>
-<!-- //////////////////////////////////////////////////////////// -->
-<!-- number navigation -->
-<div class="container" style=" position: fixed;bottom:240px; right: 10px; width: 400px; height: 395px;  padding: 5px;"> 
- <?php 
- while($newdataanew = mysqli_fetch_assoc($selectQuestion_runnew)) {
-    $questionNumber = $newdataanew['questionNumber'];
-    $selectcount = "SELECT MAX(studentGivenAn) as studentGivenAn,questionNumber FROM questionoptions WHERE questionNumber='{$questionNumber}' AND examPaperID='{$examPaperID}' AND studentID='$studentID' ";
-    $selectcount_run = mysqli_query($conn, $selectcount);
-    $resultnew = mysqli_fetch_assoc($selectcount_run);
-   
-   ?>
- <span class="numberboxsx"  >
-
-<?php 
-if($resultnew['studentGivenAn'] == 1)
-{
-   ?>
-   <img src="../images/hd-green-dot-circle-icon-11642066802ysgbn4cpvp.png" style="width: 12px; height: 12px; position: absolute;  top: -5px;  margin-left: 9px;" alt="" srcset="">
-   <?php
-}
-?>
- 
- 
- 
-<a href="questions.php?questionNumber=<?php echo $newdataanew['questionNumber'];?> & ExamPaperID=<?php echo $examPaperID?> & ExamPaperName=<?php echo $examPaperName?>" style="align-items: center; position: relative; bottom: 7px; text-decoration: none; padding: 10px; width: 100%; height: 100%; display: block; margin: 0px auto;"><?php echo $newdataanew['questionNumber'];?></a>
- </span>
-
-<?php
- }
- 
- ?>
-
 
  
- 
- 
- 
- 
-</div>
-
-
-
-
-
-
 
 </body>
- <script>
+ <!-- <script>
 setInterval(function (){
    var thewindoWidth = window.innerWidth;
    if(thewindoWidth < 1200){
@@ -770,7 +577,12 @@ $.ajax({
           
             
             success: function (response) {  //请求成功回调
-                $(".hswotheerror").html(response);
+                $(".showtheErrorText").html(response);
+                $(".hswotheerror").addClass("name");
+                setTimeout(() => {
+                  $(".showtheErrorText").html(" ");
+                  $(".hswotheerror").removeClass("name")
+                }, 5000);
             },
              
         })
@@ -783,7 +595,7 @@ $.ajax({
 } , 1000);
 
    
- </script>
+ </script> -->
 <script type="text/javascript">
   var obj =   setInterval(function(){
  
@@ -808,11 +620,17 @@ $.ajax({
 </script>
 
   <script src="vertical_question_form_replace.js"></script>
-  <script src="getSingelQuestionSecond.js"></script>
+  <script src="getSingelQuestionSecond_replace.js"></script>
  <script src="finalpassword.js"></script>
-<script src="detectTabnew.js"></script>
+<script src="detectTabNew.js"></script>
 <script src="timmernew.js"></script>
 <script src="gobackwords.js"></script>
 <script src="studentAnswerNew.js"></script>
+
+<script src="checkAnderCountoously.js"></script>
+
+ 
+
+
  
 </html>

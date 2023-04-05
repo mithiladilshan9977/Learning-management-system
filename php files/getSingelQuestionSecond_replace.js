@@ -4,7 +4,10 @@ $(document).ready(function () {
         e.preventDefault();
 
         var questionnumber = $(this).closest(".buttonHolder").find(".inputNumberField").val();
-        var data = "questionnumber_next="+questionnumber;
+        var counterval = $(this).closest(".buttonHolder").find(".inputFieldCounter").val();
+     
+
+        var data = "questionnumber_next="+questionnumber + "&counterval_next=" + counterval;
         $.ajax({
             type: "POST",   
             url: "getsinglequestionSecond.php",   
