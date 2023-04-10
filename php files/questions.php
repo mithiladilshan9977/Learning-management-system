@@ -2,7 +2,7 @@
 
 include("databaseconn.php");
 session_start();
- 
+ error_reporting(0) ;
 require("sessionTime_paperTime.php");
 
 if(!isset($_SESSION['studentID'])){
@@ -139,30 +139,54 @@ $numberforows = mysqli_num_rows($refrechSelect_run);
   
 
  
+ 
+//upload by excel or not
+$updalodbyornotSQL = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$examID' AND deleteornot='0'";
+$updalodbyornotSQL_run = mysqli_query($conn ,$updalodbyornotSQL);
+$updalodbyornotSQLUpload = mysqli_fetch_assoc($updalodbyornotSQL_run);
+
+
+///import from excel file
+$importExcelKey = 'qkrjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+
+
+function encryptthisExcel($data, $importExcelKey) {
+$encryption_key = base64_decode($importExcelKey);
+$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+$encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+return base64_encode($encrypted . '::' . $iv);
+}
+
+
+function decryptthisExcel($data, $importExcelKey) {
+$encryption_key = base64_decode($importExcelKey);
+list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
+return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+}
+
+
+
+
+    //manually added data encription
+
+    $manualyKey = 'ekwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
 
  
- $key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+function encryptthismanual($data, $manualyKey) {
+    $encryption_key = base64_decode($manualyKey);
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    return base64_encode($encrypted . '::' . $iv);
+    }
+    
+ 
+    function decryptthismanual($data, $manualyKey) {
+    $encryption_key = base64_decode($manualyKey);
+    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
+    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    }
 
- //ENCRYPT FUNCTION
- function encryptthis($data, $key) {
-     $encryption_key = base64_decode($key);
-     $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-     $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
-     return base64_encode($encrypted . '::' . $iv);
-     }
-     
-     //DECRYPT FUNCTION
-     function decryptthis($data, $key) {
-     $encryption_key = base64_decode($key);
-     list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
-     return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
-     }
 
-     function decryptthissone($data, $newkey) {
-      $encryption_key = base64_decode($newkey);
-      list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
-      return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
-      }
 
  
 
@@ -457,10 +481,10 @@ while($rows = mysqli_fetch_assoc($selectNotChangeQuestion_run))
         <p class="whatisquestionCSS"></b><?php echo $counter.' ) ';?> <?php 
         
         if($getSelectdata['uploadByExcelOrnot'] == 1){
-         echo decryptthis($rows['questionText'],$key);  
+         echo decryptthismanual($rows['questionText'],$manualyKey);  
          
          }else{
-           echo decryptthissone($rows['questionText'],$newkey);  
+           echo decryptthisExcel($rows['questionText'],$importExcelKey);  
          
          }
 
@@ -489,9 +513,9 @@ while($rows = mysqli_fetch_assoc($selectNotChangeQuestion_run))
             echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $options['optionID'];?>"  style="cursor: pointer;">  <?php
             
             if($getSelectdata['uploadByExcelOrnot'] == 1){
-               echo  decryptthis($options['options'],$key);     
+               echo  decryptthismanual($options['options'],$manualyKey);     
              }else{
-               echo decryptthis($options['options'],$keyee);     
+               echo decryptthisExcel($options['options'],$importExcelKey);     
            
              }            
             

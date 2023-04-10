@@ -79,26 +79,43 @@ if  (mysqli_num_rows($sqlselectBatch_run) > 0){
     $studentIDArray[] = $row['studentID'];
        }
 }
+///import from excel file
+$importExcelKey = 'qkrjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
 
-$key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
-
-//ENCRYPT FUNCTION
-function encryptthis($data, $key) {
-    $encryption_key = base64_decode($key);
+ 
+function encryptthisExcel($data, $importExcelKey) {
+    $encryption_key = base64_decode($importExcelKey);
     $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
     $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
     return base64_encode($encrypted . '::' . $iv);
     }
     
-    //DECRYPT FUNCTION
-    function decryptthis($data, $key) {
-    $encryption_key = base64_decode($key);
+ 
+    function decryptthisExcel($data, $importExcelKey) {
+    $encryption_key = base64_decode($importExcelKey);
     list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
     return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
     }
 
  
 
+//manually add questions
+$manualyKey = 'ekwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+
+//ENCRYPT FUNCTION
+function encryptthismanual($data, $manualyKey) {
+    $encryption_key = base64_decode($manualyKey);
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    return base64_encode($encrypted . '::' . $iv);
+    }
+    
+    //DECRYPT FUNCTION
+    function decryptthismanual($data, $manualyKey) {
+    $encryption_key = base64_decode($manualyKey);
+    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
+    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    }
 
    
       
@@ -207,7 +224,7 @@ if (isset($_POST['uploadExcel_question'])) {
   $PaperID = $row[0];
   $questionumber_new = $row[1];
   $questionText = $row[2];
-  $encrptedQuestion =  encryptthis($questionText, $key);
+  $encrptedQuestion =  encryptthisExcel($questionText, $importExcelKey);
   
   foreach($studentIDArray as $StudentIndexNum){
     $StudentIndexNum;
@@ -256,13 +273,13 @@ if (isset($_POST['uploadExcel_question_options'])) {
     $examPpaperID= $row[0];
     $questioNumber = $row[1];
 
-        $optionArray[0] = encryptthis($row[2],$key);
-        $optionArray[1] = encryptthis($row[3],$key);
-        $optionArray[2] = encryptthis($row[4],$key);
-        $optionArray[3] = encryptthis($row[5],$key);
-        $optionArray[4] = encryptthis($row[6],$key);
+        $optionArray[0] = encryptthisExcel($row[2],$importExcelKey);
+        $optionArray[1] = encryptthisExcel($row[3],$importExcelKey);
+        $optionArray[2] = encryptthisExcel($row[4],$importExcelKey);
+        $optionArray[3] = encryptthisExcel($row[5],$importExcelKey);
+        $optionArray[4] = encryptthisExcel($row[6],$importExcelKey);
 
-    $theAnswer = encryptthis($row[7],$key);
+    $theAnswer = encryptthisExcel($row[7],$importExcelKey);
 
     foreach($studentIDArray as $StudentIndexNum){
       $StudentIndexNum;
@@ -271,7 +288,7 @@ if (isset($_POST['uploadExcel_question_options'])) {
    
         
   
-      if(decryptthis($questionOptions,$key) == decryptthis($theAnswer,$key)){
+      if(decryptthisExcel($questionOptions,$importExcelKey) == decryptthisExcel($theAnswer,$importExcelKey)){
          $is_correct = 1;
       }else{
           $is_correct = 0;
@@ -766,18 +783,19 @@ if(mysqli_num_rows($sql_run) !== 0) {
  ?>
  
 <h6>
-  <?php echo  $counterplus;?> ) <?php 
-if($getSelectdata['uploadByExcelOrnot'] == 1){
-echo decryptthis($hetquestion['questionText'],$key);  
+  <?php echo  $counterplus;?> ) 
+  <?php 
+      if($getSelectdata['uploadByExcelOrnot'] == 1 )
+      {
+        echo decryptthismanual($hetquestion['questionText'],$manualyKey);  
 
-}else{
-  echo decryptthis($hetquestion['questionText'],$keyee);  
+      }else{
+        echo decryptthisExcel($hetquestion['questionText'],$importExcelKey);  
 
-}
+      }
 
-
-
-
+ 
+ 
 ?>
 </h6>
 
@@ -791,16 +809,22 @@ echo decryptthis($hetquestion['questionText'],$key);
    ?>
  <p style="margin-left: 20px;">
  
- <?php $newtdaa = mysqli_fetch_assoc($selectoprion_run);
+ <?php
+ 
+     $newtdaa = mysqli_fetch_assoc($selectoprion_run);
 
-  if($getSelectdata['uploadByExcelOrnot'] == 1){
-    echo $s . '. ' . decryptthis($newtdaa['options'],$key);     
-  }else{
-    echo $s . '. ' . decryptthis($newtdaa['options'],$keyee);     
+   if($getSelectdata['uploadByExcelOrnot'] == 1 )
+   {
+    echo $s . '. ' . decryptthismanual($newtdaa['options'],$manualyKey);     
 
-  }
+   }else{
+    echo $s . '. ' . decryptthisExcel($newtdaa['options'],$importExcelKey);     
+
+   }
+  
        
-       ?>
+       ?> 
+       
         <?php if ($newtdaa['is_correct'] == '1')
          { ?> 
        <img src="../images/correct_bb6njyhdw0rf.svg" alt="" srcset="" style="width: 20px; height: 20px;">

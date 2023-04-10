@@ -1,7 +1,7 @@
 <?php 
 include("databaseconn.php");
 session_start();
-// error_reporting(0);
+error_reporting(0);
 require("lectetrSESSION.php");
 
 if(!isset($_SESSION['lectureID'])){
@@ -20,20 +20,49 @@ if(isset($_SESSION['EXAM_PAPER_ID'])){
   
   
 }
+ 
 
-$key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+//upload by excel or not
+    $updalodbyornotSQL = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$examID' AND deleteornot='0'";
+    $updalodbyornotSQL_run = mysqli_query($conn ,$updalodbyornotSQL);
+    $updalodbyornotSQLUpload = mysqli_fetch_assoc($updalodbyornotSQL_run);
 
-//ENCRYPT FUNCTION
-function encryptthis($data, $key) {
-    $encryption_key = base64_decode($key);
+
+ ///import from excel file
+$importExcelKey = 'qkrjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+
+ 
+function encryptthisExcel($data, $importExcelKey) {
+    $encryption_key = base64_decode($importExcelKey);
     $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
     $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
     return base64_encode($encrypted . '::' . $iv);
     }
     
-    //DECRYPT FUNCTION
-    function decryptthis($data, $key) {
-    $encryption_key = base64_decode($key);
+ 
+    function decryptthisExcel($data, $importExcelKey) {
+    $encryption_key = base64_decode($importExcelKey);
+    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
+    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    }
+
+
+
+    //manually enetered data encrypt
+
+    $manualyKey = 'ekwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+
+ 
+function encryptthismanual($data, $manualyKey) {
+    $encryption_key = base64_decode($manualyKey);
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    return base64_encode($encrypted . '::' . $iv);
+    }
+    
+ 
+    function decryptthismanual($data, $manualyKey) {
+    $encryption_key = base64_decode($manualyKey);
     list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
     return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
     }
@@ -47,6 +76,12 @@ $selectquesry_run = mysqli_query($conn ,$selectquesry);
 $getSelectdata = mysqli_fetch_assoc($selectquesry_run);
 
 $questionNumberFindOptions =  $getSelectdata['questionNumber'];
+
+
+//checking upload by manually or not
+$selectquesry = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$examID' ";
+ $selectquesry_run = mysqli_query($conn ,$selectquesry);
+ $getSelectdata = mysqli_fetch_assoc($selectquesry_run);
  
 
 ?>
@@ -55,7 +90,24 @@ $questionNumberFindOptions =  $getSelectdata['questionNumber'];
       <button class="btn btn-dark updatingQuestionGiven">Update question</button> 
       <span class="showthequestionupdayedmsg"></span>
       <input type="hidden" class="questioNumberToUpdate" value="<?php echo $questioNumber ; ?>">
-        <input type="text" class="form-control my-3 updatingQuestion" value="<?php echo decryptthis($getSelectdata['questionText'] , $key)?>" >         
+ <?php 
+ 
+ if($getSelectdata['uploadByExcelOrnot'] == 1)
+ {
+  ?>
+      <input type="text" class="form-control my-3 updatingQuestion" value="<?php echo decryptthismanual($getSelectdata['questionText'] , $manualyKey)?>" >   
+
+  <?php
+ }else{
+  ?>
+      <input type="text" class="form-control my-3 updatingQuestion" value="<?php echo decryptthisExcel($getSelectdata['questionText'] , $importExcelKey)?>" >   
+
+  <?php
+ }
+ ?>
+      
+        
+
           </p>
 
  
@@ -72,7 +124,25 @@ while($rowdata = mysqli_fetch_assoc($selectoptions_random_run))
     ?>
        <p class="updateQuestionHolder">   
         <span class="updateQuestionCheck"></span>
-         <button class="btn btn-info  updateThisQuestion"    >Update</button> <input type="hidden" class="optionIDTOUpdate" value="<?php echo $rowdata['optionID'] ; ?>" >   <input type="text" class="form-control   updatetedOption" value="<?php echo decryptthis($rowdata['options'] , $key)?>" style="width:88%">    
+         <button class="btn btn-info  updateThisQuestion">Update</button> 
+         <input type="hidden" class="optionIDTOUpdate" value="<?php echo $rowdata['optionID'] ; ?>" > 
+        <?php
+        if( $getSelectdata['uploadByExcelOrnot'] == 1)
+        {
+          ?>
+         <input type="text" class="form-control   updatetedOption" value="<?php echo decryptthismanual($rowdata['options'] , $manualyKey)?>" style="width:88%">    
+
+          <?php
+        }else
+        {
+          ?>
+         <input type="text" class="form-control   updatetedOption" value="<?php echo decryptthisExcel($rowdata['options'] , $importExcelKey)?>" style="width:88%">    
+
+          <?php
+        }
+        
+        ?>
+       
            </p>
     <?php
 }

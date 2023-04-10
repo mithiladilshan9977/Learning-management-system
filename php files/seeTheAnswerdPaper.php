@@ -20,32 +20,53 @@ if (!isset($_SESSION['studentID'])) {
 
 
 
-$key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+ 
+//upload by excel or not
+$updalodbyornotSQL = "SELECT * FROM question where studentID='{$studentID}' AND examPaperID='$examPaperID' AND deleteornot='0'";
+$updalodbyornotSQL_run = mysqli_query($conn ,$updalodbyornotSQL);
+$updalodbyornotSQLUpload = mysqli_fetch_assoc($updalodbyornotSQL_run);
 
-//ENCRYPT FUNCTION
-function encryptthis($data, $key)
-{
-    $encryption_key = base64_decode($key);
+
+///import from excel file
+$importExcelKey = 'qkrjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+
+
+function encryptthisExcel($data, $importExcelKey) {
+$encryption_key = base64_decode($importExcelKey);
+$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+$encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+return base64_encode($encrypted . '::' . $iv);
+}
+
+
+function decryptthisExcel($data, $importExcelKey) {
+$encryption_key = base64_decode($importExcelKey);
+list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
+return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+}
+
+
+
+
+
+    //manually added data encription
+
+    $manualyKey = 'ekwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+
+ 
+function encryptthismanual($data, $manualyKey) {
+    $encryption_key = base64_decode($manualyKey);
     $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
     $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
     return base64_encode($encrypted . '::' . $iv);
-}
-
-//DECRYPT FUNCTION
-function decryptthis($data, $key)
-{
-    $encryption_key = base64_decode($key);
-    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2), 2, null);
+    }
+    
+ 
+    function decryptthismanual($data, $manualyKey) {
+    $encryption_key = base64_decode($manualyKey);
+    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
     return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
-}
-
-function decryptthissone($data, $newkey)
-{
-    $encryption_key = base64_decode($newkey);
-    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2), 2, null);
-    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
-}
-
+    }
 
 
  
@@ -183,11 +204,11 @@ while($dater  = mysqli_fetch_assoc($select_answer_1_run)){
  
  ?>
          <h5 class="whatisquestion"><?php echo $counter .' ) ';?><?php 
-          if($getSelectdata['uploadByExcelOrnot'] == 1){
-            echo decryptthis($getqutiondata['questionText'],$key);  
+          if($updalodbyornotSQLUpload['uploadByExcelOrnot'] == 1){
+            echo decryptthismanual($getqutiondata['questionText'],$manualyKey);  
             
             }else{
-              echo decryptthissone($getqutiondata['questionText'],$newkey);  
+              echo decryptthisExcel($getqutiondata['questionText'],$importExcelKey);  
             
             }
          ?></h5>
@@ -207,11 +228,11 @@ while($dater  = mysqli_fetch_assoc($select_answer_1_run)){
                 <span class="optiontext"><u>
                   <?php 
                   
-                  if($getSelectdata['uploadByExcelOrnot'] == 1){
-                    echo decryptthis($datanew['options'],$key);  
+                  if($updalodbyornotSQLUpload['uploadByExcelOrnot'] == 1){
+                    echo decryptthismanual($datanew['options'],$manualyKey);  
                     
                     }else{
-                      echo decryptthissone($datanew['options'],$newkey);  
+                      echo decryptthisExcel($datanew['options'],$importExcelKey);  
                     
                     }
 
@@ -236,11 +257,11 @@ while($dater  = mysqli_fetch_assoc($select_answer_1_run)){
        <span class="optiontext">
        <?php 
                   
-                  if($getSelectdata['uploadByExcelOrnot'] == 1){
-                    echo decryptthis($datanew['options'],$key);  
+                  if($updalodbyornotSQLUpload['uploadByExcelOrnot'] == 1){
+                    echo decryptthismanual($datanew['options'],$manualyKey);  
                     
                     }else{
-                      echo decryptthissone($datanew['options'],$newkey);  
+                      echo decryptthisExcel($datanew['options'],$importExcelKey);  
                     
                     }
 

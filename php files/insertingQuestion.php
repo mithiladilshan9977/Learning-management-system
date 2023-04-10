@@ -18,19 +18,19 @@ else{
 
 }
 
-$key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+$manualyKey = 'ekwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
 
 //ENCRYPT FUNCTION
-function encryptthis($data, $key) {
-    $encryption_key = base64_decode($key);
+function encryptthis($data, $manualyKey) {
+    $encryption_key = base64_decode($manualyKey);
     $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
     $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
     return base64_encode($encrypted . '::' . $iv);
     }
     
     //DECRYPT FUNCTION
-    function decryptthis($data, $key) {
-    $encryption_key = base64_decode($key);
+    function decryptthis($data, $manualyKey) {
+    $encryption_key = base64_decode($manualyKey);
     list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
     return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
     }
@@ -55,7 +55,7 @@ $questionnumber =mysqli_real_escape_string($conn ,$_POST['questionnumber'] )  ;
 $whatisQuestion = mysqli_real_escape_string($conn , $_POST['whatisQuestion']) ;
 $correctNumber = mysqli_real_escape_string($conn , $_POST['correctNumber']) ;
 
-$encryptedWhatIsQuestion = encryptthis($whatisQuestion, $key);
+$encryptedWhatIsQuestion = encryptthis($whatisQuestion, $manualyKey);
 
 $choice = array();
  
@@ -89,7 +89,7 @@ foreach($studentIDArray as $StudentIndexNum){
                     $isCottect = 0;
                 }
 
-                $encyptedValue = encryptthis($value, $key);
+                $encyptedValue = encryptthis($value, $manualyKey);
                 $insertOptionsSQL = "INSERT INTO questionoptions(examPaperID,questionNumber,lectureID,studentID,options,is_correct) values('{$examPaperID}','{$questionnumber}' , '{$lecID}' ,'{$StudentIndexNum}', '{$encyptedValue}' , '{$isCottect}')";
                 $insertOptionsSQL_run = mysqli_query($conn, $insertOptionsSQL);
 
