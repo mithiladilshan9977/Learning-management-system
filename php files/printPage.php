@@ -41,11 +41,11 @@ function encryptthis($data, $key) {
   $examPaperID = $_GET['examPaperID'];
 $paperName = $_GET['paperName'];
 
-$selectquesry = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$paperName' ";
+$selectquesry = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$paperName' AND deleteornot='0'";
     $selectquesry_run = mysqli_query($conn ,$selectquesry);
     $getSelectdata = mysqli_fetch_assoc($selectquesry_run);
 
-$sqlone = "SELECT  *,COUNT(*) FROM question  WHERE question.examPaperID='$examPaperID' GROUP BY questionText HAVING COUNT(*) >1 ORDER BY questionNumber ASC";
+$sqlone = "SELECT  *,COUNT(*) FROM question  WHERE question.examPaperID='$examPaperID' AND deleteornot='0' GROUP BY questionText HAVING COUNT(*) >1 ORDER BY questionNumber ASC";
 $sql_run = mysqli_query($conn, $sqlone);
 
 $selectLecture = "SELECT lecture.* , deprtment.* FROM lecture LEFT JOIN deprtment ON lecture.departmentID = deprtment.depaermentID WHERE lecture.lectureID='{$lecID}'";
@@ -97,15 +97,15 @@ $DpaetmentName = $getLecData['departmentName'];
  <p style=" bottom: 10px; position: relative;"><?php echo date("Y-d-m") ?>(<?php echo date("Y-D-M")?>)</p>
 </div>
 <?php 
- 
+ $newcounter = 1;
 while($hetquestion = mysqli_fetch_assoc($sql_run))
 {
   ?>
   
-<h6><?php echo $hetquestion['questionNumber'];?> )
+<h6> 
 
-<?php echo $hetquestion['questionNumber'];?> ) <?php 
-if($getSelectdata['uploadByExcelOrnot'] == 1){
+<?php echo $newcounter;?> ) <?php 
+if($getSelectdata['uploadByExcelOrnot'] == 0){
 echo decryptthis($hetquestion['questionText'],$key);  
 
 }else{
@@ -128,7 +128,7 @@ echo decryptthis($hetquestion['questionText'],$key);
     <!-- ///////////////////////////////// -->
   <p style="margin-left: 20px;"><?php $newtdaa = mysqli_fetch_assoc($selectoprion_run);
 
-if($getSelectdata['uploadByExcelOrnot'] == 1){
+if($getSelectdata['uploadByExcelOrnot'] == 0){
   echo $s . '. ' . decryptthis($newtdaa['options'],$key);     
 }else{
   echo $s . '. ' . decryptthis($newtdaa['options'],$keyee);     
@@ -146,6 +146,8 @@ if($getSelectdata['uploadByExcelOrnot'] == 1){
  
 
 <?php
+
+$newcounter ++ ;
 }
 
 ?>

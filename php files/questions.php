@@ -67,7 +67,7 @@ $selectQuestion_runnew_second = mysqli_query($conn, $selectQuestionnew_second);
  
  
 
- $reandomSQL = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND()   LIMIT  $limiteTo";
+ $reandomSQL = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentID' AND deleteornot='0' ORDER BY RAND()   LIMIT  $limiteTo";
  $reandomSQL_run = mysqli_query($conn, $reandomSQL);
  $endNumber = mysqli_num_rows($reandomSQL_run);
 

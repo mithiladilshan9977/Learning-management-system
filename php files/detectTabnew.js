@@ -25,7 +25,7 @@ $(document).ready(function () {
           },
            
       })
-      alert("You are detected !. Don't open other tabs");
+      
 
   } 
 

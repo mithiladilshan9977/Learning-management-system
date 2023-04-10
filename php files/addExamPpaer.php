@@ -47,12 +47,19 @@ $getdataaaa = mysqli_fetch_assoc($selectpaper_runnnnn);
 
 $selectExmas = "SELECT * FROM examinformation WHERE batchID='{$batchID}' AND lecturID='{$lecID}' and subjectID='{$subjectID}' ";
 $selectExmas_run = mysqli_query($conn, $selectExmas);
+
+//remove the updating view holder
+
+$removesqlButtonHolder = "SELECT * FROM examinformation WHERE batchID='{$batchID}' AND lecturID='{$lecID}' and subjectID='{$subjectID}' ";
+$removesqlButtonHolder_run = mysqli_query($conn, $removesqlButtonHolder);
+$getexamdatanewww = mysqli_fetch_assoc($removesqlButtonHolder_run ) ; 
+
  
  
 
 
 // select exam paper format
-$sqlone = "SELECT  *,COUNT(*) FROM question  WHERE question.examPaperID='$examID'GROUP BY questionText HAVING COUNT(*) >1 ORDER BY questionNumber ASC";
+$sqlone = "SELECT  *,COUNT(*) FROM question  WHERE question.examPaperID='$examID' AND deleteornot='0' GROUP BY questionText HAVING COUNT(*) >1 ORDER BY questionNumber ASC";
 $sql_run = mysqli_query($conn, $sqlone);
  
 $selectLecture = "SELECT lecture.* , deprtment.* FROM lecture LEFT JOIN deprtment ON lecture.departmentID = deprtment.depaermentID WHERE lecture.lectureID='{$lecID}'";
@@ -398,7 +405,33 @@ position: absolute;
   position: relative;
 
 }
- 
+.buttonsHolder{
+ background-color: blue;
+ background-color: rgba(45, 45, 255, 0.175);
+ border-radius: 15px;
+ padding: 15px;
+}
+ .deletdquestionmessge{
+  position: fixed;
+  width:100%;
+ top: 0px;
+ }
+ .delecticon{
+  width: 40px;
+  height:40px;
+  padding: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+  border-radius: 50%;
+ transition: all 0.1s ease-in-out;
+
+ }
+ .delecticon:hover{
+ transition: all 0.1s ease-in-out;
+
+  background-color: rgba(45, 45, 255, 0.275);
+
+ }
 </style>
 <body>
 <?php include("innerpreloader.php");?>
@@ -672,6 +705,7 @@ Excel
 
 
 
+<div class="deletdquestionmessge"></div>
 
  
 
@@ -704,12 +738,14 @@ Excel
 
  
 <?php 
-
+$counterplus =1;
 if(mysqli_num_rows($sql_run) !== 0) {
  
  ?>
  
 <div class="container" style="width: 800px; margin-top: 70px;  border: 1px solid black;  padding: 15px;">
+
+
 <div class="header"  style="background-color: rgba(168, 168, 168, 0.325); padding: 10px; margin-bottom: 10px;">
 <center>
   <img src="../images/camp.png" alt="" srcset="" class="thumbnail-img my-1" style="width: 150px; height: 150px;">
@@ -730,7 +766,7 @@ if(mysqli_num_rows($sql_run) !== 0) {
  ?>
  
 <h6>
-  <?php echo $hetquestion['questionNumber'];?> ) <?php 
+  <?php echo  $counterplus;?> ) <?php 
 if($getSelectdata['uploadByExcelOrnot'] == 1){
 echo decryptthis($hetquestion['questionText'],$key);  
 
@@ -742,7 +778,9 @@ echo decryptthis($hetquestion['questionText'],$key);
 
 
 
-?></h6>
+?>
+</h6>
+
   <?php 
   $question = $hetquestion['questionNumber'];
   $selectoprion = "SELECT * FROM questionoptions WHERE questionNumber='$question' AND examPaperID='{$examID}'";
@@ -775,9 +813,42 @@ echo decryptthis($hetquestion['questionText'],$key);
   }
   ?>
 
+<?php 
+ 
+ if($getexamdatanewww['startNowExam'] == 0)
+ {
+  ?>
+<div class="buttonsHolder mb-3">
+    <span class="singelResposeHolder"></span>
+
+<input type="hidden" class="thisIsTheQuestionNumber" value=<?php echo $hetquestion['questionNumber'];?> >
+ 
+ <button class="btn btn-success my-2 updateAfterCreatedBtn"  >Update</button>
+   <img src="../images/questiondelete.png" class="delecticon delteQuestion"> 
+
+</div>
+
+<?php
+ }
+
+?>
+
+  
+
+
+
 
 <?php
  
+
+
+
+
+
+ $counterplus ++;
+
+
+
 }
 
 ?>
@@ -991,5 +1062,11 @@ echo decryptthis($hetquestion['questionText'],$key);
    <script src="getStartButton_replace.js"></script> 
    <script src="startExam.js"></script> 
 <script src="removepaper.js"></script>
+
+<script src="updateAfterCreatedQuestion.js"></script>
+<script src="deleteQuestions.js"></script>
+
+ 
+
 </body>
 </html>

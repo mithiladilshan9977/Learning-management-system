@@ -37,8 +37,6 @@ else if($row_num > 0){
   echo '<script>swal("SESSION expire Alert", "You will be automatically logged out after 10 Minutes") 
   setTimeout(goback , 2000);
   function goback(){ window.location.href="php files/student_class.php";};
-  
-   
   </script>';
  
  
