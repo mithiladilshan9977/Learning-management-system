@@ -120,6 +120,14 @@ $numberofpages = ceil($BDnumberofrows/$rowsperpage);
     .blackbtns{
         text-decoration: none;
     }
+    .svgimage{
+        width: 400px;
+        height: 400px;
+    }
+    .newtext{
+        text-align: center;
+        margin-top: 15px;
+    }
     </style>
 </head>
 <body>
@@ -167,6 +175,17 @@ $numberofpages = ceil($BDnumberofrows/$rowsperpage);
 <table class="table table-striped  showserachresult">
 
 
+
+        <?php if(mysqli_num_rows($mysqliquery) == 0 )
+        {
+            ?>
+ <center>   <img src="../images/departmentimage.svg" class="svgimage"></center>
+ <p class="newtext">No departments added yet</p>
+
+<?php
+                
+            } else{
+                ?>
 <thead>
             <tr>
             <th scope="col">Department Name</th>
@@ -182,11 +201,7 @@ $numberofpages = ceil($BDnumberofrows/$rowsperpage);
 
 
         <tbody>
-        <?php if(mysqli_num_rows($mysqliquery) == 0 ){
-                echo '<tr><div class="alert alert-danger" role="alert">
-                No Records Found
-              </div></tr>'; 
-            } else{
+                <?php
                 while($rows = mysqli_fetch_assoc($mysqliquery))
                 
                 {

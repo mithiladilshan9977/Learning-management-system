@@ -130,6 +130,13 @@ $numberofpages = ceil($BDnumberofrows/$rowsperpage);
         text-decoration: none;
          
     }
+    .svgimage{
+      width: 400px;
+      height: 400px;
+        }
+        .noaddedsubjectyet{
+            text-align: center;
+        }
     
     </style>
     <link rel="shortcut icon" href="../images/camp.png" type="x-icon">
@@ -194,6 +201,15 @@ $numberofpages = ceil($BDnumberofrows/$rowsperpage);
 
 <table class="table table-striped showserachresult">
 
+
+   <?php if(mysqli_num_rows($newmysqli) == 0 )
+   { ?>
+
+<center><img src="../images/nosir.svg" class="svgimage"></center>
+<p class="noaddedsubjectyet">No lecturers added yet 😥</p>
+   <?php
+            } else{
+              ?>
 <thead>
             <tr>
             <th scope="col">Username</th>
@@ -209,11 +225,8 @@ $numberofpages = ceil($BDnumberofrows/$rowsperpage);
         </thead>
 
         <tbody>
-   <?php if(mysqli_num_rows($newmysqli) == 0 ){
-                echo '<tr><div class="alert alert-danger" role="alert">
-                No Records Found
-              </div></tr>'; 
-            } else{
+
+              <?php
                 while($rows = mysqli_fetch_assoc($newmysqli))
                 
                 {

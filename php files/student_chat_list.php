@@ -71,6 +71,15 @@ $selectStudentSQL_run = mysqli_query($conn, $selectStudentSQL);
       margin-left: 10px;
 
     }
+    .stillnorfrietdsTExt{
+      margin: 0 auto;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .noFirendsImage{
+      width: 500px;
+      height: 400px;
+    }
 </style>
 <body>
  
@@ -89,7 +98,8 @@ $selectStudentSQL_run = mysqli_query($conn, $selectStudentSQL);
  if(mysqli_num_rows($selectStudentSQL_run) == 0)
  {
   ?>
- <h2>No record found</h2>
+ <p class="stillnorfrietdsTExt">😥 Still you don't have any friends 😥<br>Once there are registered, they will appear here 😍 </p>
+ <center><img src="../images/fireends.png" class="noFirendsImage"></center>
   <?php
  }else  
 

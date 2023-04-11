@@ -13,8 +13,8 @@ $("#addsubjectbtn").on('click' , function(){
              method:"post",
              data:data,
 
-             success:function(data){
-          $(".subjectResult").html(data);
+             success:function(reponse){
+          $(".subjectResult").html(reponse);
              }
       });
 });

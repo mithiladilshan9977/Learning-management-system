@@ -353,7 +353,7 @@ $deletedsqlquery = mysqli_query($conn, $deletedSQL);
  
 <?php 
 if(mysqli_num_rows($newquery_new) <=0){
-  echo " <h4 class='maintitell'>Add your first Class</h4> ";
+  echo " <p class='maintitell'>Add your first Class</p> ";
   echo "<br>";
   echo " <img src='../images/undraw_instant_support_re_s7un.svg' id='clasimage' > ";
 }

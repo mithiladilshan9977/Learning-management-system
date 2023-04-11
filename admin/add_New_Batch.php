@@ -13,7 +13,12 @@ include("dbconection.php");
     $sql="INSERT INTO batch(NameOfBatch) VALUES ('$batchname')";
     $query = mysqli_query($conn,$sql);
 
-    echo '<script>swal("Good job!", "Successfully added", "success")</script>';
+    echo '<script>swal("Good job!", "Successfully added", "success")
+    setTimeout(goback , 2000);
+    function goback(){ window.location.href="batch.php";};
+  </script>';
+   
+ 
    
  
   }

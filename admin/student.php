@@ -232,6 +232,14 @@ position: absolute;
     #excelfile{
       display: none;
     }
+    .svgimage{
+        width: 400px;
+        height: 400px;
+    }
+    .newtext{
+        text-align: center;
+        margin-top: 15px;
+    }
     </style>
     <link rel="shortcut icon" href="../images/camp.png" type="x-icon">
     <title>Students</title>
@@ -464,7 +472,19 @@ Delected
     <table class="table table-striped showserachresult">
 
 
-    <thead>
+    
+   <?php if(mysqli_num_rows($querynew) == 0 )
+   {?>
+
+<center>   <img src="../images/studentimage.svg" class="svgimage"></center>
+ <p class="newtext">No students yet 😥</p>
+ 
+<?php
+                 
+            } else{
+
+              ?>
+<thead>
             <tr>
             <th scope="col">First name</th>
             <th scope="col">Last name</th>
@@ -477,11 +497,7 @@ Delected
             </tr>
         </thead>
    <tbody>
-   <?php if(mysqli_num_rows($querynew) == 0 ){
-                echo '<tr><div class="alert alert-danger" role="alert">
-                No Records Found
-              </div></tr>'; 
-            } else{
+              <?php
                 while($rows = mysqli_fetch_assoc($querynew))
                 
                 {

@@ -1,5 +1,6 @@
 <?php
  session_start();
+ error_reporting(0);
  if(!isset($_SESSION['username'] )){
     echo "<script>window.location.href = 'index.php'</script>";
     die();
@@ -13,9 +14,17 @@
 $sqlsubject1 = "SELECT * FROM subject WHERE status='0'";
 $sqlsubject1_RUN = mysqli_query($conn, $sqlsubject1);
 $subjectonerows = mysqli_num_rows($sqlsubject1_RUN);
-  $subjectPrecetage = ceil(($subjectonerows / $allrows) * 100);
+ 
 
+  try {
+    $subjectPrecetage = ceil(($subjectonerows / $allrows) * 100);
+ 
+    echo $subjectPrecetage;  
+  } catch (DivisionByZeroError $e) {
+    
+  }
 
+  
 
  $sqltwo = "SELECT * FROM student";
  $departmentquery = mysqli_query($conn , $sqltwo);
@@ -50,7 +59,16 @@ $lecturePrecetage = ceil(($lectureZeroo / $lectureAll) * 100);
  $sqltfourZero_run = mysqli_query($conn , $sqltfourZero);
  $batchzerooo = mysqli_num_rows($sqltfourZero_run);
 
-$batchprecentage = ceil(($batchzerooo / $batch) * 100);
+
+
+try {
+    $batchprecentage = ceil(($batchzerooo / $batch) * 100);
+ 
+    echo $batchprecentage;  
+  } catch (DivisionByZeroError $e) {
+     
+  }
+
 ?>
 
 <!DOCTYPE html>

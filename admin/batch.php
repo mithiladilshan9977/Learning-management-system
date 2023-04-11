@@ -111,6 +111,15 @@ $mysqliquery = mysqli_query($conn , $sqlquery);
     .blackbtns{
         text-decoration: none;
     }
+    .nobatchtext{
+      margin: 0 auto;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .nobatchimage{
+      width: 400px;
+      height: 400px;
+    }
     </style>
     <link rel="shortcut icon" href="../images/camp.png" type="x-icon">
     <title>Batch</title>
@@ -133,7 +142,18 @@ $mysqliquery = mysqli_query($conn , $sqlquery);
 
 
 <table class="table table-striped showserachresult">
-         <thead>
+         
+
+        <?php if(mysqli_num_rows($mysqliquery) == 0 )
+        {
+                ?>
+                      <center> <img src="../images/nobatchimage.svg" class="nobatchimage"></center>
+                      <p class="nobatchtext">No batches added yet 😥</p>
+
+                <?php
+            } else{
+              ?>
+              <thead>
             <tr>
             <th scope="col">Batch name</th>
              <th scope="col">Delete</th>
@@ -144,12 +164,8 @@ $mysqliquery = mysqli_query($conn , $sqlquery);
         </thead>
 
         <tbody>
-
-        <?php if(mysqli_num_rows($mysqliquery) == 0 ){
-                echo '<tr><div class="alert alert-danger" role="alert">
-                No Records Found
-              </div></tr>'; 
-            } else{
+          
+              <?php
                 while($rows = mysqli_fetch_assoc($mysqliquery))
                 
                 {

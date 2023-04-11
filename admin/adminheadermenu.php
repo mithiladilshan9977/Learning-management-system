@@ -1,16 +1,18 @@
 <?php 
 
 include("dbconection.php");
- 
+//  error_reporting(0);
 if(!isset($_SESSION['username'] )){
     echo "<script>window.location.href = 'index.php'</script>";
     die();
  }else{
   $conrdinatername = $_SESSION['username'];
+  $paersonID =  $_SESSION['AId'];
  }
 
-$selectnewsql = "SELECT * FROM adminn WHERE username='$conrdinatername'";
+$selectnewsql = "SELECT * FROM adminn WHERE AId='$paersonID'";
 $selectnewsql_run = mysqli_query($conn, $selectnewsql);
+$datanew = mysqli_fetch_assoc($selectnewsql_run);
 ?>
 
 
@@ -40,8 +42,15 @@ $selectnewsql_run = mysqli_query($conn, $selectnewsql);
 <nav class="navbar" style="background-color: rgba(0, 30, 255, 0.867)">
   <div class="container-fluid">
     <a class="navbar-brand" href="#" id="navtitle">Go - Xm Admin panel</a>
-    <h6 class="mainheading">Logged-in as <small>'<?php $datanew = mysqli_fetch_assoc($selectnewsql_run);
-     echo $name = $datanew['username'];
+    <h6 class="mainheading">Logged-in as <small>'<?php 
+    if($datanew['person'] == "admin")
+    {
+      echo $name = $datanew['username'];
+
+    }else{
+      echo $name = $datanew['username'];
+
+    }
   
  
     ?>'</small></h6>

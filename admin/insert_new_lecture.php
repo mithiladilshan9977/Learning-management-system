@@ -9,6 +9,14 @@ $LectLastName = $_POST['LectLastName'];
 $sql = "INSERT INTO lecture (firstname , lastname ,departmentID ) VALUES ('$LectFirstName' , '$LectLastName', '$selectdepartment' )";
 $query = mysqli_query($conn , $sql);
 
-echo'<script>swal("Good job!", "Successfully Inserted", "success")</script>';
+if( $query){
+    echo '<script>swal("Lecturer added", "Successfully Inserted", "success")
+    setTimeout(goback , 2000);
+    function goback(){ window.location.href="lectures.php";};
+  </script>';
+ 
+
+  }
+  
 
 ?>

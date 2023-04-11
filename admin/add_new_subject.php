@@ -31,8 +31,12 @@ include("dbconection.php");
     $sql = "INSERT INTO subject (depaermentID,code , title, semester , description) VALUES ('$departmentID','$thecode' , '$subjectTitle' , '$semester' , '$descrition')";
     $query = mysqli_query($conn , $sql);
     if( $query){
-
-      echo '<script>window.location.href="subjects.php"</script>';
+      echo '<script>swal("Subject is added", "Good job") 
+      setTimeout(goback , 2000);
+      function goback(){ window.location.href="subjects.php";};
+    </script>';
+   
+ 
     }
 
   

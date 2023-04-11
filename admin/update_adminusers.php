@@ -10,7 +10,6 @@ if(!isset($_SESSION['username'] )){
      $username = $_GET['username'];
      $firstname = $_GET['firstname'];
      $lastname = $_GET['lastname'];
-     $email = $_GET['email'];
 
 
  
@@ -24,9 +23,9 @@ if(isset($_POST['updatesubjectinfo'])){
     $username = $_POST['username'];
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
-    $email = $_POST['email'];
+ 
 
-    $newsql = "UPDATE adminn SET username='$username' , firstname='$firstname' , lastname='$lastname' , email='$email' WHERE AId='$AId'";
+    $newsql = "UPDATE adminn SET username='$username' , firstname='$firstname' , lastname='$lastname'  WHERE AId='$AId'";
     $newquery = mysqli_query($conn, $newsql);
 
     if($newquery){
@@ -112,9 +111,7 @@ if(isset($_POST['updatesubjectinfo'])){
 <label for=""><b>Last name</b></label>
 <input class="form-control inputfilesss" type="text" placeholder="Subject Code" value ="<?php echo $lastname; ?>"  aria-label="default input example" id=" " name="lastname">
 <br>
-<label for=""><b>Email address</b></label>
-<input class="form-control inputfilesss" type="text" placeholder="Email address" value ="<?php echo $email; ?>"  aria-label="default input example" id=" " name="email">
-<br>
+ 
 <input type="submit" value="Update"  name = "updatesubjectinfo" id=" " class="btn btn-success" >
 
 <a href="./qrcode.php" style="text-decoration: none;" class="btn btn-info" >Generate QR</a>

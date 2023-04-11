@@ -107,7 +107,7 @@
 <a href="subjects.php" id="newsvgimages"> <img src="../images/back_l2mhb66hdam7.svg" alt=""> Back</a>
 
 
- 
+ <span class="subjectResult"></span>
 <div class="container" id="maincontainer">
 <div class=" ">
         

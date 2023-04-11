@@ -49,6 +49,14 @@ $sql_run = mysqli_query($conn, $sql);
     .blackbtns{
         text-decoration: none;
     }
+    .svgimage{
+        width: 400px;
+        height: 400px;
+    }
+    .newtext{
+        text-align: center;
+        margin-top: 15px;
+    }
     </style>
 </head>
 <body>
@@ -64,7 +72,19 @@ $sql_run = mysqli_query($conn, $sql);
 
 <table class="table table-striped showserachresult">
 
-           <thead>
+           
+
+        <?php 
+        if(mysqli_num_rows($sql_run)==0)
+        {
+           ?>
+                   
+                   <center>   <img src="../images/nofiles.svg" class="svgimage"></center>
+ <p class="newtext">No uploded files yet 😥</p>
+<?php  
+        }else
+        {?>
+<thead>
             <tr>
             <th scope="col">File Name</th>
             <th scope="col">Description</th>
@@ -80,12 +100,7 @@ $sql_run = mysqli_query($conn, $sql);
 
         <tbody>
 
-        <?php 
-        if(mysqli_num_rows($sql_run)==0){
-            echo '<tr><div class="alert alert-danger" role="alert">
-                No Files Found
-              </div></tr>'; 
-        }else{
+<?php
             while($rows = mysqli_fetch_assoc($sql_run))
             {
                 ?>

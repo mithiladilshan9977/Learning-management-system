@@ -112,12 +112,12 @@ include("dbconection.php");
        <br>
       <label for="" mb-1><h4>User name</h4></label>
      
-      <input class="form-control widthnew" id="theusername" type="text" placeholder="User name" aria-label="default input example"   name="username">
+      <input class="form-control widthnew" id="theusername" type="text" placeholder="User name" aria-label="default input example"   name="username" autocomplete="off">
  
  
       <label for="" id="pasword" mb-1><h4>Password</h4></label>
      
-      <input class="form-control widthnew" id="thepassword" type="text" placeholder="Password" aria-label="default input example"   name="password">
+      <input class="form-control widthnew" id="thepassword" type="text" placeholder="Password" aria-label="default input example"   name="password" autocomplete="off">
      
         <hr >
       <label for="" class="lables  my-1"><b>Log in as </b></label>

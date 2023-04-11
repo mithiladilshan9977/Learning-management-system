@@ -10,7 +10,6 @@ if(isset($_POST['submit'])){
      $lastname = $_POST['lastname'];
      $password = $_POST['password'];
      $reenterpassword = $_POST['reenterpassword'];
-     $emailaddress = $_POST['email'];
      $person = $_POST['persogn_signIn'];
      $thedepartment = $_POST['thedepartment'];
      
@@ -38,7 +37,7 @@ if(isset($_POST['submit'])){
 
       else{
          
-        $sql = "INSERT INTO adminn (departmentID,username , firstname , lastname,email, password ,person) VALUES('$thedepartment','$username' , '$firstname' , '$lastname' ,'$emailaddress', '$password' , '$person')";
+        $sql = "INSERT INTO adminn (departmentID,username , firstname , lastname, password ,person) VALUES('$thedepartment','$username' , '$firstname' , '$lastname'  , '$password' , '$person')";
 
         $mysqliquery = mysqli_query($conn , $sql);
 
@@ -284,7 +283,7 @@ if(isset($_POST['submit'])){
     function getpassword(){
      
         var chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890!@#$%^&*()/{}[]";
-        var passowrdLenght = 25;
+        var passowrdLenght = 16;
         var password ="";
         for(var i =0 ; i <= passowrdLenght ;i ++){
             var randomNumber = Math.floor(Math.random() * chars.length);

@@ -170,6 +170,13 @@ position: absolute;
             
             top: 3px;
         }
+        .svgimage{
+      width: 400px;
+      height: 400px;
+        }
+        .noaddedsubjectyet{
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -270,28 +277,35 @@ Delected
 
 
  <table class="table table-striped showserachresult">
-        <thead>
-            <tr>
-            <th scope="col">Code</th>
-            <th scope="col">Suject Title</th>
-            <th scope="col">Semester</th>
-            <th scope="col">Description</th>
-            <th scope="col">Delete</th>
-
-            </tr>
-        </thead>
-    <tbody>
+        
         
 
-    <?php if(mysqli_num_rows($mysqliquery) == 0 ){
-                echo '<tr><div class="alert alert-danger" role="alert">
-                No Records Found
-              </div></tr>'; 
+    <?php if(mysqli_num_rows($mysqliquery) == 0 )
+    { 
+        ?>
+           <center>   <img src= "../images/noSubjects.svg" class="svgimage"></center>
+
+              <p class="noaddedsubjectyet">No addded subject yet 😥</p>
+        <?php
             } else{
+                ?>
+<thead>
+                    <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Suject Title</th>
+                    <th scope="col">Semester</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Delete</th>
+        
+                    </tr>
+                </thead>
+            <tbody>
+                <?php
                 while($rows = mysqli_fetch_assoc($mysqliquery))
                 
                 {
                     ?>
+                
                          <tr  > 
                        <td><?php echo $rows['code'] ; ?></td>
                        <td><?php echo $rows['title'] ; ?></td>

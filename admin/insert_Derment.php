@@ -15,7 +15,13 @@ if(!$Department || !$PersoneIncgarge){
     $sql="INSERT INTO deprtment(departmentName,dean) VALUES ('$Department' , '$PersoneIncgarge')";
     $query = mysqli_query($conn , $sql);
 
-    echo'<script>swal("Good job!", "Successfully Inserted", "success");</script>';
+    echo '<script>swal("Good job!", "Successfully Inserted", "success")
+    setTimeout(goback , 2000);
+    function goback(){ window.location.href="department.php";};
+  </script>';
+   
+
+
 }
 
 ?>

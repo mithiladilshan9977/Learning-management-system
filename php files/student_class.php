@@ -123,11 +123,14 @@ echo "File extention failed";
           border: 1px solid rgba(0, 33, 151, 0.323);
         }
         .imageimage{
-          opacity: 0.4;
+          width: 400px;
+          height: 400px;
         }
         .titlmain{
           text-align: center;
           margin: 0 auto;
+          margin-bottom: 20px;
+         
    
         }
         .main{
@@ -384,11 +387,13 @@ if(mysqli_num_rows($query)==0)
 {
   ?>
   <div class="main">
-  <h3 class="titlmain">No added Classes</h3>
+ 
+  <p class="titlmain">No addded classes</p>
 
   </div>
-    <img src="../images/clasroom.svg" class="img-fluid imageimage" alt="...">
 
+    <img src="../images/clasroom.svg" class="img-fluid imageimage" alt="...">
+     
     
 
 <?php

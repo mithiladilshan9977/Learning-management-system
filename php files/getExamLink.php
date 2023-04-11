@@ -5,7 +5,7 @@
 include("databaseconn.php");
 session_start();
 // require("lectetrSESSION.php");
-
+error_reporting(0);
 if(!isset($_SESSION['studentID'])){
   header("location:../index.php");
   die();

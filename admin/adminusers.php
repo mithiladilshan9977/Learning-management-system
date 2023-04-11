@@ -114,24 +114,27 @@ $numberofpages = ceil($BDnumberofrows/$rowsperpage);
 
    
 <table class="table table-striped showserachresult">
-       <thead>
-           <tr>
-           <th scope="col">Username</th>
-           <th scope="col">First name</th>
-           <th scope="col">Last name</th>
-           <th scope="col">Email</th>
-           <th scope="col">Delete</th>
-
-           </tr>
-       </thead>
-   <tbody>
+       
        
 
    <?php if(mysqli_num_rows($mysqliquery) == 0 ){
                echo '<tr><div class="alert alert-danger" role="alert">
                No Records Found
              </div></tr>'; 
-           } else{
+           } else
+           {?>
+<thead>
+           <tr>
+           <th scope="col">Username</th>
+           <th scope="col">First name</th>
+           <th scope="col">Last name</th>
+          
+           <th scope="col">Delete</th>
+
+           </tr>
+       </thead>
+   <tbody>
+           <?php
                while($rows = mysqli_fetch_assoc($mysqliquery))
                
                {
@@ -140,9 +143,9 @@ $numberofpages = ceil($BDnumberofrows/$rowsperpage);
                       <td><?php echo $rows['username'] ; ?></td>
                       <td><?php echo $rows['firstname'] ; ?></td>
                       <td><?php echo $rows['lastname'] ; ?></td>
-                      <td><?php echo $rows['email'] ; ?></td>
+                      
                       <td> <input class="form-check-input  " <?php if($rows["status"]=='1'){echo "checked" ; }?>     onclick="admintoggleStatus(<?php echo $rows['AId'];?>),  isCkecked()" type="checkbox" role="switch" id="check"></td>
-                      <td> <a href="update_adminusers.php?AId=<?php echo $rows['AId']; ?> & username=<?php echo $rows['username'];?> & firstname=<?php echo $rows['firstname'] ;?> & lastname=<?php echo $rows['lastname'] ; ?> & email=<?php echo $rows['email'] ; ?>" class="btn btn-outline-success" ><img src="../images/update_hwfy7ndx85t2.svg" alt="" id="imageupdate"></a></td>
+                      <td> <a href="update_adminusers.php?AId=<?php echo $rows['AId']; ?> & username=<?php echo $rows['username'];?> & firstname=<?php echo $rows['firstname'] ;?> & lastname=<?php echo $rows['lastname'] ; ?>  " class="btn btn-outline-success" ><img src="../images/update_hwfy7ndx85t2.svg" alt="" id="imageupdate"></a></td>
 
 
 
