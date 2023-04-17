@@ -25,6 +25,11 @@ if(!isset($_SESSION['studentID'])){
                    $_SESSION['STUDENT_GIVEN_ANSWERS'] = 0;
                }
 
+
+  
+
+
+
       $selectuestion = "SELECT * FROM questionoptions WHERE optionID='{$option_id_unckecked}' AND studentID='{$studentID}' AND questionNumber='{$questione_number_unchecked}'"     ;
       $selectuestion_run = mysqli_query($conn ,  $selectuestion);
       $getdata = mysqli_fetch_assoc($selectuestion_run);
@@ -32,6 +37,7 @@ if(!isset($_SESSION['studentID'])){
 
         $updatetheSlected = "UPDATE questionoptions SET studentGivenAn=0 WHERE optionID='{$option_id_unckecked}' AND studentID='{$studentID}' AND questionNumber='{$questione_number_unchecked}'";
         $updatetheSlected_run = mysqli_query($conn, $updatetheSlected);
+ 
 
         if($updatetheSlected_run){
             echo "<small class='good'>Removed<small>";
