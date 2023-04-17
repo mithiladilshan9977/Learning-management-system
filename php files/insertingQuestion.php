@@ -1,7 +1,7 @@
 <?php
 include("databaseconn.php");
 session_start();
-error_reporting(0);
+// error_reporting(0);
 // require("lectetrSESSION.php");
 
 if(!isset($_SESSION['lectureID'])){
@@ -48,7 +48,7 @@ if  (mysqli_num_rows($sqlselectBatch_run) > 0){
  
 
 
-
+global $insertQuesSQL_run;
     
 
 $questionnumber =mysqli_real_escape_string($conn ,$_POST['questionnumber'] )  ;
@@ -70,6 +70,9 @@ foreach($studentIDArray as $StudentIndexNum){
     $StudentIndexNum;
     $insertQuesSQL = "INSERT INTO question(examPaperID,questionNumber,lectureID,studentID,questionText,uploadByExcelOrnot) VALUES ('{$examPaperID}','{$questionnumber}'  ,'{$lecID}','{$StudentIndexNum}','{$encryptedWhatIsQuestion}','1')";
     $insertQuesSQL_run = mysqli_query($conn, $insertQuesSQL);
+
+    $updatedQuestionType  = "UPDATE question SET questionType='single' WHERE questionNumber='$questionnumber' AND examPaperID='$examPaperID' AND lectureID = '$lecID'";
+    $updatedQuestionType_run = mysqli_query($conn, $updatedQuestionType);
 }
 
 
@@ -103,7 +106,7 @@ foreach($studentIDArray as $StudentIndexNum){
             }
         }
     }
-}else{
-    echo "not insertted";
+} else{
+    echo "not inserted";
 }
 ?>

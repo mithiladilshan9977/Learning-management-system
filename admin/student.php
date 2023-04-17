@@ -8,7 +8,6 @@ if(!isset($_SESSION['username'] )){
 $sql ="SELECT * FROM batch WHERE status = '0'";
 $query = mysqli_query($conn, $sql);
 
-$data = mysqli_fetch_assoc($query);
 
 
 ?>

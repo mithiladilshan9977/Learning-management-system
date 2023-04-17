@@ -20,6 +20,8 @@
 <!-- <script src="gobackwords.js"></script> -->
  
 <script src="vertical_question_form_replace.js"></script>
+<script type="text/javascript" src="multiplequestionAnswers.js"> </script>
+
      
 </body>
 </html>
@@ -142,31 +144,63 @@ while($rows = mysqli_fetch_assoc($selectNotChangeQuestion_run))
         
          
          $quesnumbr = $rows['questionNumber'] ; 
+          $questioTyepe = $rows['questionType'] ; 
+
                    
         $selectoptions_randowm = "SELECT * FROM questionoptions WHERE questionNumber='$quesnumbr' AND  examPaperID='$examPaperID' AND studentID='$studentID' ORDER BY RAND() ";
         $selectoptions_random_run = mysqli_query($conn, $selectoptions_randowm);
-
-        while($options = mysqli_fetch_assoc($selectoptions_random_run ))
+        // mutiplequestion format
+        if($rows['questionType'] == "multiple")
         {
-         ?>
-        <p>   <input type='text'  class="quesnumberValue" value=<?php echo $options['questionNumber']?>>  <input type="radio" id="theradiobutton"  name="<?php echo $options['questionNumber']?>"   <?php if ($options['studentGivenAn'] == 1) {
-            echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $options['optionID'];?>"  style="cursor: pointer;">  <?php
-            
-            if($getSelectdata['uploadByExcelOrnot'] == 1){
-               echo  decryptthismanual($options['options'],$manualyKey);     
-             }else{
-               echo decryptthisExcel($options['options'],$importExcelKey);     
-           
-             }            
-            
-            ?> </p>
-   
+          while($options = mysqli_fetch_assoc($selectoptions_random_run ))
+          {
+           ?>
+          <p>   <input type='text'  class="quesnumberValue" value=<?php echo $options['questionNumber']?>>  <input type="checkbox" id="theradiobutton" class="checkboxanswer" name="<?php echo $options['questionNumber']?>"   <?php if ($options['studentGivenAn'] == 1) {
+              echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $options['optionID'];?>"  style="cursor: pointer;">  <?php
+              
+              if($getSelectdata['uploadByExcelOrnot'] == 1){
+                 echo  decryptthismanual($options['options'],$manualyKey);     
+               }else{
+                 echo decryptthisExcel($options['options'],$importExcelKey);     
+             
+               }            
+              
+              ?> </p>
+     
+  
+  <?php
+          }
+        }else
+        {
 
-<?php
+
+
+          
+          while($options = mysqli_fetch_assoc($selectoptions_random_run ))
+          {
+           ?>
+          <p>   <input type='text'  class="quesnumberValue" value=<?php echo $options['questionNumber']?>>  <input type="radio" id="theradiobutton"  name="<?php echo $options['questionNumber']?>"   <?php if ($options['studentGivenAn'] == 1) {
+              echo 'checked'; }?> class="my-1 studentAnswer" value="<?php echo $options['optionID'];?>"  style="cursor: pointer;">  <?php
+              
+              if($getSelectdata['uploadByExcelOrnot'] == 1){
+                 echo  decryptthismanual($options['options'],$manualyKey);     
+               }else{
+                 echo decryptthisExcel($options['options'],$importExcelKey);     
+             
+               }            
+              
+              ?> </p>
+     
+  
+  <?php
+          }
         }
+        
         
         ?>
          <span class="responseshow">  </span>
+         <span class="mulitiplqquestion">  </span>
+
       </div>
    
 <?php

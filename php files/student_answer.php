@@ -48,8 +48,6 @@ if(!isset($_SESSION['studentID'])){
 }
  }
       
-
-
       echo "<small class='good'>Submitted<small>";
 
         }else{

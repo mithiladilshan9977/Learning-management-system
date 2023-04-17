@@ -20,10 +20,16 @@ if(!$selectstudentbatch || !$indexnumber || !$studentFName || !$StudentLname){
     $newquery = mysqli_query($conn , $sql);
 
 
+   if($newquery){
+    echo '<script>swal("Good job!", "Successfully Inserted", "success")
+    setTimeout(goback , 2000);
+    function goback(){ window.location.href="student.php";};
+  </script>';
    
 
+   }
 
-    echo'<script>swal("Good job!", "Successfully Inserted", "success")</script>'  ;
+
  
  
 

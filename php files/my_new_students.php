@@ -95,8 +95,8 @@ $sqlforBackground_run = mysqli_query($conn, $sqlforBackground);
           margin: 0 auto;
       text-align: center;
         }#theimage{
-    opacity: 0.4;
-    margin-top: 30px;
+        width: 400px;
+        height: 400px;
 }
 .nonptificationstitle{
     color: rgba(0, 0, 0, 0.433);
@@ -191,6 +191,7 @@ $sqlforBackground_run = mysqli_query($conn, $sqlforBackground);
       ?>
 
 <img src="<?php echo $newdatarows['imagepath']?>" class="img-thumbnail studentimage" alt="...">
+
 <?php
       
     }
@@ -263,8 +264,11 @@ if($newdatarows['greenicon'] =='1')
 if(mysqli_num_rows($sqlforBackground_run) ==0)
 {
   ?>       <div class="containernew">
-                              <h1 class="nonptificationstitle">No Students</h1>
-                               <img src="../images/undraw_educator_re_ju47.svg" alt="" id="theimage" class="img-fluid">
+                            <center>   <img src="../images/undraw_educator_re_ju47.svg" alt="" id="theimage" class="img-fluid"></center>
+                            <br>
+
+                            <p class="nonptificationstitle">No Students added yet 😥</p>
+
 
                                </div>
 <?php

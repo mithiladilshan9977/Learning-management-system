@@ -2,7 +2,7 @@
 
 include("databaseconn.php");
 session_start();
- error_reporting(0) ;
+//  error_reporting(0) ;
 require("sessionTime_paperTime.php");
 
 if(!isset($_SESSION['studentID'])){
@@ -86,8 +86,10 @@ $numberforows = mysqli_num_rows($refrechSelect_run);
          $questionData = mysqli_fetch_assoc($reandomSQL_run) ;
            $questionNumber = $questionData['questionNumber'];
            $theQuestionText = $questionData['questionText'];
+           $questionType = $questionData['questionType'];
+
    
-         $InsertSelectedQuestions = "INSERT INTO questionselected (examPaperID,questionNumber,LecID,studentID,questionText) VALUES('$examPaperID' , '$questionNumber','$lecID','$studentID', '$theQuestionText')";
+         $InsertSelectedQuestions = "INSERT INTO questionselected (examPaperID,questionType,questionNumber,LecID,studentID,questionText) VALUES('$examPaperID' ,'$questionType', '$questionNumber','$lecID','$studentID', '$theQuestionText')";
          $InsertSelectedQuestions_run = mysqli_query($conn , $InsertSelectedQuestions);
          if( $InsertSelectedQuestions_run){
            
@@ -141,7 +143,7 @@ $numberforows = mysqli_num_rows($refrechSelect_run);
  
  
 //upload by excel or not
-$updalodbyornotSQL = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$examID' AND deleteornot='0'";
+$updalodbyornotSQL = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$examPaperID' AND deleteornot='0'";
 $updalodbyornotSQL_run = mysqli_query($conn ,$updalodbyornotSQL);
 $updalodbyornotSQLUpload = mysqli_fetch_assoc($updalodbyornotSQL_run);
 

@@ -19,7 +19,7 @@ while($startNumber <=$thenumberOfquestion) {
 <center> <h3 class="my-3">Add New Question</h3> </center>
  
 
- <div class="container"  style="width: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+ <div class="container singelAnwerquestion"  style="width: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
 
  <label for=""><b>Question Number</b></label>
 
@@ -65,7 +65,24 @@ while($startNumber <=$thenumberOfquestion) {
 
  <input type="submit" class="btn btn-success my-3 submitPaperbtn   " value="Add This Question"  >
  <small style="color: red; opacity: 0.8;">Add question from beginning</small>
+ 
+ <select class="form-select mulipleSelectDropdown" aria-label="Default select example">
+  <option selected>Open this select menu</option>
+  <option value="multiple">Add multiple question</option>
+ 
+</select>
+<div class="container innerdiv">
+   
 </div>
+</div>
+
+
+
+
+
+
+
+
 
 <hr>
 
@@ -88,12 +105,17 @@ while($startNumber <=$thenumberOfquestion) {
       border: 2px solid rgba(189, 0, 0, 0.825);
       color: rgba(189, 0, 0, 0.825);
      }
+     .mulipleSelectDropdown{
+      width: 50%;
+     }
 </style>
 <body>
     
 
 
 <script src="insertingQestions.js"></script>
+<script src="LoadMultipleQuestion_new.js"></script>
+
 </body>
 </html>
 
