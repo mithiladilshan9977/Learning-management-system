@@ -20,7 +20,7 @@ $examPaperID = $_GET['examPaperID'];
 
 $selectQuestionnew = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='{$studentid}'";
 $selectQuestionnew_run = mysqli_query($conn, $selectQuestionnew);
-  $allQuestions = mysqli_num_rows($selectQuestionnew_run);
+  $allQuestions = $_SESSION['NUMBER_OF_QUESTIONS'];
 
 
 $selectstudent = "SELECT * FROM student WHERE studentID='{$studentid}'";
@@ -104,7 +104,10 @@ else
 
 
 <h6 class="mt-3"> <strong>Marks you scored : </strong>   </h6> 
-<p style="font-size: 40px;"><?php echo $thFinelMarks = round(($numberofCorrectAnswers / $allQuestions) * 100);?> %</p>
+<p style="font-size: 40px;"><?php echo $thFinelMarks = round(($numberofCorrectAnswers / $allQuestions) * 100); 
+                     
+
+?> %</p>
 
 </div>
 <center>

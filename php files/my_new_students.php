@@ -295,8 +295,9 @@ else
   {
     ?>
 
-
+<a href="studentProgreeCharts.php?StudentID=<?php echo $studentdata['studentID'] ?> && SFname=<?php echo $studentdata['firstname']?> && SLname=<?php echo $studentdata['lastname']?>" title="See Progress of <?php echo $studentdata['firstname'].''. $studentdata['lastname'];?>">
 <div class="card" style="width: 18rem;" id="imagestudent">
+
   <img src="../images/student_c8u8j9e9ravk.svg" class="card-img-top" alt="..." id="newimagestudent">
  
     <span class="card-text"><?php echo $studentdata['firstname'];?> <?php echo $studentdata['lastname'];?></span>
@@ -304,9 +305,9 @@ else
     <small><?php echo $studentdata['indexnumber'];?></small>
   </div>
    
- 
+
 </div>
- 
+</a>
 
   <?php
   }

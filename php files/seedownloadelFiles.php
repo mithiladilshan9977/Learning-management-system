@@ -52,6 +52,14 @@ if(isset($_POST['notdonrbtn'])){
   height: 30px;
   margin-left: 13px;
 }
+.nofilesvg{
+  width: 400px;
+  height: 400px;
+  margin-bottom: 20px;
+}
+.newtext{
+  text-align: center;
+}
         </style>
 </head>
 <body>
@@ -69,6 +77,25 @@ if(isset($_POST['notdonrbtn'])){
  
  
 <table class="table table-striped showserachresult">
+
+
+        <?php 
+ 
+ $sql= "SELECT * FROM file WHERE subjectID='$subjectID'";
+ $query = mysqli_query($conn ,$sql);
+
+ 
+
+   
+   if(mysqli_num_rows($query) == 0 )
+   {?>
+              <center> <img src="../images/nofiles.svg" class="nofilesvg"></center>
+              <p class="newtext">No files yet 😥</p>
+   <?php
+                
+            }
+             else {
+              ?>
 <thead>
             <tr>
             <th scope="col">File Name</th>
@@ -84,26 +111,8 @@ if(isset($_POST['notdonrbtn'])){
         </thead>
 
         <tbody>
-
-        <?php 
+              <?php
  
- $sql= "SELECT * FROM file WHERE subjectID='$subjectID'";
- $query = mysqli_query($conn ,$sql);
-
- 
-
-   
-   if(mysqli_num_rows($query) == 0 ){
-                echo '<tr><div class="alert alert-danger" role="alert">
-                No Files Found
-              </div></tr>'; 
-            } else {
-
-
-
-
-
-
                 while($data = mysqli_fetch_assoc($query))
                 
                    { ?>

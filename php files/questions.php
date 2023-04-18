@@ -48,7 +48,7 @@ $selectQuestion_runnew = mysqli_query($conn, $selectQuestionnew);
  $exampaperName =  $gettinewdatanew['paperName'];
  $lecID =  $gettinewdatanew['lecturID'];
  $limiteNumber =  $gettinewdatanew['limitTo'];
-
+ $_SESSION['NUMBER_OF_QUESTIONS'] =  $limiteNumber;
 
  $selectlectur = "SELECT * FROM lecture WHERE lectureID='{$lecID}'";
  $selectlectur_run = mysqli_query($conn , $selectlectur);
@@ -636,14 +636,7 @@ $.ajax({
  </script>
 
 
-<script type="text/javascript">
- window.addEventListener('beforeunload', function () {
-   event.preventDefault();
-   event.returnValue="";
-   
-   
- })
-</script>
+ 
 
   <script src="vertical_question_form_replace.js"></script>
   <script src="getSingelQuestionSecond_replace.js"></script>
