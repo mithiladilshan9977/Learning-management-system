@@ -11,12 +11,16 @@ if(!isset($_SESSION['studentID'])){
 } else{
   $studentid = $_SESSION['studentID'];
   $numberofCorrectAnswers =  $_SESSION['STUDENT_GIVEN_ANSWERS'];
+  $examPaperID=$_SESSION['EXAM_PAPER_ID'] ;
+  $realstudentID =$_SESSION['studentID'];
      
 }
  
  
 
 $examPaperID = $_GET['examPaperID'];
+$SubjectName = $_GET['subjectName'];
+
 
 $selectQuestionnew = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='{$studentid}'";
 $selectQuestionnew_run = mysqli_query($conn, $selectQuestionnew);
@@ -30,6 +34,21 @@ $getdata = mysqli_fetch_assoc($selectstudent_run);
 $selectDetect = "SELECT * FROM detectexam WHERE studentID='{$studentid}' AND examid='{$examPaperID}'";
 $selectDetect_RUN = mysqli_query($conn, $selectDetect);
  
+//inserting student marks
+$selectQuestionnew = "SELECT * FROM question WHERE examPaperID='$examPaperID' AND studentID='$studentid'";
+$selectQuestionnew_run = mysqli_query($conn, $selectQuestionnew);
+ $allQuestions = $_SESSION['NUMBER_OF_QUESTIONS'];
+
+ $numberofCorrectAnswers =  $_SESSION['STUDENT_GIVEN_ANSWERS'];
+  $thFinelMarks = round(($numberofCorrectAnswers / $allQuestions) * 100) ;
+
+  $InsertMarks = "INSERT INTO studentExamMarks (studentID , SubjectName, SubjectMarks) VALUES ('$realstudentID' , '$SubjectName','$thFinelMarks' )";
+  $InsertMarks_run = mysqli_query($conn , $InsertMarks);
+  if($InsertMarks_run){
+            
+  }
+
+
 
 ?>
 <!DOCTYPE html>

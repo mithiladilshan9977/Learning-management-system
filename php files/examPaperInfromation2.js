@@ -7,11 +7,13 @@ $(document).ready(function () {
         var timeInHours = $("#timeInHours").val();
         var timeInMinutes = $("#timeInMinutes").val();
         var closesPassword = $("#closesPassword").val();
-        var repeatPassword = $("#repeatPassword").val();
+        var startPassword = $("#startPassword").val();
+
+         
         var limitTo = $("#limiteTo").val();
 
  
-        var data = "nameofpaper=" + nameofpaper + "&timeInHours=" + timeInHours + "&timeInMinutes=" + timeInMinutes + "&closesPassword=" + closesPassword + "&repeatPassword=" + repeatPassword + "&limitTo="+limitTo;
+        var data = "nameofpaper=" + nameofpaper + "&timeInHours=" + timeInHours + "&timeInMinutes=" + timeInMinutes + "&closesPassword=" + closesPassword +"&startPassword=" + startPassword  + "&limitTo="+limitTo;
 
         $.ajax({
             type: "POST",   

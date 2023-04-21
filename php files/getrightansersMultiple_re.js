@@ -6,22 +6,30 @@ $(document).ready(function () {
           var inputeElemet = $(this).closest(".questionBox").find(".inpuetanswerbox");
 
 
-          inputeElemet.val(inputeQuestionText + " ***R");
+          inputeElemet.val(inputeQuestionText + "***R");
  
     
         } else {
-            inputeElemet.val(inputeQuestionText);
+        
+            var inputeElemet = $(this).closest(".questionBox").find(".inpuetanswerbox");
+            var inputeQuestionText = $(this).closest(".questionBox").find(".inpuetanswerbox").val();
+
+           var newval =  inputeQuestionText.replace('***R',"");
+            inputeElemet.val(newval);
         }
       });
 
       $(".submitPaperbtnMultiple").click(function (e) { 
         e.preventDefault();
-  
+        $(this).addClass("submitPaperbtncclicked");
         var choise1 = $(this).closest(".mainouterdiv").find(".choice1").val();
         var choise2 = $(this).closest(".mainouterdiv").find(".choice2").val();
         var choise3 = $(this).closest(".mainouterdiv").find(".choice3").val();
         var choise4 = $(this).closest(".mainouterdiv").find(".choice4").val();
         var choise5 = $(this).closest(".mainouterdiv").find(".choice5").val();
+
+        var errorshow = $(this).closest(".singelAnwerquestion").find(".shwoemsshe") ;
+
 
  
 
@@ -43,7 +51,7 @@ $(document).ready(function () {
             data: data,   
           
             success: function (response) {  
-                $(".shwoemsshe").html(response);
+              errorshow.html(response);
             },
             
         })

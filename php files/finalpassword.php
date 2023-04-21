@@ -2,7 +2,7 @@
 
 include("databaseconn.php");
 session_start();
-error_reporting(0);
+// error_reporting(0);
 // require("lectetrSESSION.php");
 
 if(!isset($_SESSION['studentID'])){
@@ -17,9 +17,7 @@ if(!isset($_SESSION['studentID'])){
 
  
 }
-if(!isset($_SESSION['STUDENT_GIVEN_ANSWERS'])){
-  $_SESSION['STUDENT_GIVEN_ANSWERS'] = 0;
-}
+
 
   $password = $_POST['thepassword'];
 
@@ -29,42 +27,24 @@ $getdata = mysqli_fetch_assoc($selectExam_run);
 $passowrdSaved = $getdata['password'];
 $subjectName = $getdata['paperName'];
 
-$selectQuestionnew = "SELECT * FROM question WHERE examPaperID='$examid' AND studentID='$realstudentID'";
-$selectQuestionnew_run = mysqli_query($conn, $selectQuestionnew);
-    $allQuestions = $_SESSION['NUMBER_OF_QUESTIONS'];
  
-
-
 //getting students marks in %
 
-
-
-if($password !==$passowrdSaved)
+if($password !==$passowrdSaved){
+  echo '<div class="alert alert-danger" role="alert">
+  Password is not correct
+ </div>';
+ die();
+}else
 {
-    echo '<div class="alert alert-danger" role="alert">
-   Password is not correct
-  </div>';
-  die();
-}
-else{
-  $numberofCorrectAnswers =  $_SESSION['STUDENT_GIVEN_ANSWERS'];
-  $thFinelMarks = round(($numberofCorrectAnswers / $allQuestions) * 100) ;
-   
+?>
+ <script> window.location.href='endOfPaper.php?examPaperID=<?php echo  $examid ;?> && subjectName=<?php echo  $subjectName ;?>'</script>";
+
+<?php
   
-  $InsertMarks = "INSERT INTO studentExamMarks (studentID , SubjectName, SubjectMarks) VALUES ('$realstudentID' , '$subjectName','$thFinelMarks' )";
-  $InsertMarks_run = mysqli_query($conn , $InsertMarks);
-  if($InsertMarks_run){
-    echo "<script> window.location.href='endOfPaper.php?examPaperID=<?php echo  $examid?>'</script>";
-
-  }
 
 }
-
  
-  
-{ 
-    
-}
 
 
 ?>

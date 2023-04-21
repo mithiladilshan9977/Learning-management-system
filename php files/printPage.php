@@ -7,7 +7,7 @@
 include("databaseconn.php");
 session_start();
 require("lectetrSESSION.php");
-error_reporting(0);
+// error_reporting(0);
 
 if(!isset($_SESSION['lectureID'])){
   header("location:../index.php");
@@ -19,9 +19,11 @@ if(!isset($_SESSION['lectureID'])){
   $subjectID = $_SESSION['subjectID_new'];
 
 }
- 
+$examPaperID = $_GET['examPaperID'];
+$paperName = $_GET['paperName'];
+
 //upload by excel or not
-$updalodbyornotSQL = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$examID' AND deleteornot='0'";
+$updalodbyornotSQL = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$examPaperID' AND deleteornot='0'";
 $updalodbyornotSQL_run = mysqli_query($conn ,$updalodbyornotSQL);
 $updalodbyornotSQLUpload = mysqli_fetch_assoc($updalodbyornotSQL_run);
 
@@ -51,28 +53,23 @@ return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
 
     $manualyKey = 'ekwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
 
+    //ENCRYPT FUNCTION
+    function encryptthis($data, $manualyKey) {
+        $encryption_key = base64_decode($manualyKey);
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+        return base64_encode($encrypted . '::' . $iv);
+        }
+        
+        //DECRYPT FUNCTION
+        function decryptthis($data, $manualyKey) {
+        $encryption_key = base64_decode($manualyKey);
+        list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
+        return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+        }
+
  
-function encryptthismanual($data, $manualyKey) {
-    $encryption_key = base64_decode($manualyKey);
-    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
-    return base64_encode($encrypted . '::' . $iv);
-    }
-    
- 
-    function decryptthismanual($data, $manualyKey) {
-    $encryption_key = base64_decode($manualyKey);
-    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
-    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
-    }
-
-
-
-
-  $examPaperID = $_GET['examPaperID'];
-$paperName = $_GET['paperName'];
-
-$selectquesry = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$paperName' AND deleteornot='0'";
+$selectquesry = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$examPaperID' AND deleteornot='0'";
     $selectquesry_run = mysqli_query($conn ,$selectquesry);
     $getSelectdata = mysqli_fetch_assoc($selectquesry_run);
 
@@ -137,7 +134,7 @@ while($hetquestion = mysqli_fetch_assoc($sql_run))
 
 <?php echo $newcounter;?> ) <?php 
 if($getSelectdata['uploadByExcelOrnot'] == 1){
-echo decryptthismanual($hetquestion['questionText'],$manualyKey);  
+echo decryptthis($hetquestion['questionText'],$manualyKey);  
 
 }else{
   echo decryptthisExcel($hetquestion['questionText'],$importExcelKey);  
@@ -160,7 +157,7 @@ echo decryptthismanual($hetquestion['questionText'],$manualyKey);
   <p style="margin-left: 20px;"><?php $newtdaa = mysqli_fetch_assoc($selectoprion_run);
 
 if($getSelectdata['uploadByExcelOrnot'] == 1){
-  echo $s . '. ' . decryptthismanual($newtdaa['options'],$manualyKey);     
+  echo $s . '. ' . decryptthis($newtdaa['options'],$manualyKey);     
 }else{
   echo $s . '. ' . decryptthisExcel($newtdaa['options'],$importExcelKey);     
 

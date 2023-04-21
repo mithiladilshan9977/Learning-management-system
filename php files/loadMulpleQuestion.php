@@ -28,8 +28,8 @@ if($mutipleText  == 'multiple')
 
  <input type="number" name=""   class="form-control my-3 questionumber" style="width: 100px;" max="50" min="1" value="<?php echo $startNumber?>">
  </center>
- <label for="" class="my-1"><b>What is the question ? </b></label>
- <small class="my-2">This is a multiple choise question<small>
+ <label for="" class="my-1"><b>What is the question ? </b></label> 
+ 
  <textarea name="" id="" cols="5" rows="5" class="form-control whatisQuestion" placeholder="Write the question here" style="color:  black; font-weight: bold;"></textarea>
 
 
@@ -73,9 +73,11 @@ if($mutipleText  == 'multiple')
  </div>
  <div class="shwoemsshe"> </div>
  
-
- <input type="submit" class="btn btn-success my-3 submitPaperbtnMultiple" value="Add This Question"  >
- <small style="color: red; opacity: 0.8;">Add question from beginning</small>
+<center>
+ <input type="submit" class="btn btn-success my-1 submitPaperbtnMultiple" value="Add This Question"  ></center>
+ 
+ <center>
+ <small style="color: red; opacity: 0.8;">Add question from beginning</small></center>
 
 </div>
 <?php
@@ -103,13 +105,23 @@ if($mutipleText  == 'multiple')
      .mulipleSelectDropdown{
       width: 50%;
      }
+     .mainouterdiv{
+      background-color: rgba(45, 45, 255, 0.075);
+      padding: 15px;
+      border-radius: 15px;
+      margin-top: 10px;
+     }
+     .myCheckbox{
+      cursor: pointer;
+     }
+     
 </style>
 <body>
     
 
 
  
-<script src="getrightansersMultiple.js"></script>
+<script src="getrightansersMultiple_re.js"></script>
 
 </body>
 </html>

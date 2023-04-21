@@ -2,7 +2,7 @@
 
 include("databaseconn.php");
 session_start();
-//  error_reporting(0) ;
+ error_reporting(0) ;
 require("sessionTime_paperTime.php");
 
 if(!isset($_SESSION['studentID'])){
@@ -360,7 +360,7 @@ function encryptthismanual($data, $manualyKey) {
  
       height:700px;
 
- 
+ margin-top: -180px;
       border-radius: 15px;
       padding: 15px;
       overflow: hidden;
@@ -447,7 +447,7 @@ function encryptthismanual($data, $manualyKey) {
  
 
 <!-- //////////////////////////////////////////////////////////////////////////////// -->
-<div class="container maincontainerbox" style="width:70% ;   float: left; margin-left: 55px; top:-90px;position: relative;">
+<div class="container maincontainerbox" style="width:70% ;   float: left; margin-left: 55px; top:-80px;position: relative;">
 <div class="modal-header mainheader">
 
          <img src="../images/camp.png" class="rounded float-start campImage"/>  
@@ -588,11 +588,11 @@ while($rows = mysqli_fetch_assoc($selectNotChangeQuestion_run))
  
 
 </body>
- <!-- <script>
+ <script>
 setInterval(function (){
    var thewindoWidth = window.innerWidth;
    if(thewindoWidth < 1200){
-      alert("You are detected !.Don't try to minimize the tab");
+   
 
 var data  = "thewidownWidth="  + window.innerWidth;
 
@@ -621,7 +621,18 @@ $.ajax({
 } , 1000);
 
    
- </script> -->
+ </script>
+
+ <script type="text/javascript">
+window.onbeforeunload = function() {
+ 
+  return "Are you sure you want to leave this page?";
+
+}
+ 
+ </script>
+
+
 <script type="text/javascript">
   var obj =   setInterval(function(){
  
@@ -636,13 +647,16 @@ $.ajax({
  </script>
 
 
+
+
+
  
 
   <script src="vertical_question_form_replace.js"></script>
   <script src="getSingelQuestionSecond_replace.js"></script>
  <script src="finalpassword.js"></script>
 <script src="detectTabNew.js"></script>
-<script src="timmernew.js"></script>
+<script src="timmer.js"></script>
 <script src="gobackwords.js"></script>
 <script src="studentAnswerNew.js"></script>
 

@@ -79,9 +79,9 @@ $questionNumberFindOptions =  $getSelectdata['questionNumber'];
 
 
 //checking upload by manually or not
-$selectquesry = "SELECT * FROM question where lectureID='{$lecID}' AND examPaperID='$examID' ";
+$selectquesry = "SELECT * FROM question where lectureID='$lecID' AND examPaperID='$examID' ";
  $selectquesry_run = mysqli_query($conn ,$selectquesry);
- $getSelectdata = mysqli_fetch_assoc($selectquesry_run);
+ $getSelectdata_manuamllyOrNot = mysqli_fetch_assoc($selectquesry_run);
  
 
 ?>
@@ -92,9 +92,9 @@ $selectquesry = "SELECT * FROM question where lectureID='{$lecID}' AND examPaper
       <input type="hidden" class="questioNumberToUpdate" value="<?php echo $questioNumber ; ?>">
  <?php 
  
- if($getSelectdata['uploadByExcelOrnot'] == 1)
+ if($getSelectdata_manuamllyOrNot['uploadByExcelOrnot'] == 1)
  {
-  ?>
+  ?> 
       <input type="text" class="form-control my-3 updatingQuestion" value="<?php echo decryptthismanual($getSelectdata['questionText'] , $manualyKey)?>" >   
 
   <?php
@@ -127,7 +127,7 @@ while($rowdata = mysqli_fetch_assoc($selectoptions_random_run))
          <button class="btn btn-info  updateThisQuestion">Update</button> 
          <input type="hidden" class="optionIDTOUpdate" value="<?php echo $rowdata['optionID'] ; ?>" > 
         <?php
-        if( $getSelectdata['uploadByExcelOrnot'] == 1)
+        if( $getSelectdata_manuamllyOrNot['uploadByExcelOrnot'] == 1)
         {
           ?>
          <input type="text" class="form-control   updatetedOption" value="<?php echo decryptthismanual($rowdata['options'] , $manualyKey)?>" style="width:88%">    

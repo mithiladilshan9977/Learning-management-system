@@ -20,6 +20,7 @@ $(document).ready(function () {
 
     if(seconds ==0){
       clearInterval(obj);
+      alert("dwadwd")
       
     }
    

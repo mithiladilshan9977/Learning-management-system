@@ -66,8 +66,8 @@ while($startNumber <=$thenumberOfquestion) {
  <input type="submit" class="btn btn-success my-3 submitPaperbtn   " value="Add This Question"  >
  <small style="color: red; opacity: 0.8;">Add question from beginning</small>
  
- <select class="form-select mulipleSelectDropdown" aria-label="Default select example">
-  <option selected>Open this select menu</option>
+ <select class="form-select mulipleSelectDropdown mt-2" aria-label="Default select example">
+  <option selected class="removetext">Remove</option>
   <option value="multiple">Add multiple question</option>
  
 </select>
@@ -107,6 +107,9 @@ while($startNumber <=$thenumberOfquestion) {
      }
      .mulipleSelectDropdown{
       width: 50%;
+     }
+     .removetext{
+      color:red;
      }
 </style>
 <body>

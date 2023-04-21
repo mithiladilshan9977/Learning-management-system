@@ -2,6 +2,8 @@
 
 include("databaseconn.php");
 session_start();
+error_reporting();
+
 // require("lectetrSESSION.php");
 
 if(!isset($_SESSION['studentID'])){
@@ -39,6 +41,6 @@ if(!isset($_SESSION['studentID'])){
 
 <div class="addLink"></div>
 
-<script src="getExamLink.js"></script>
+<script src="getExamLink2.js"></script>
 </body>
 </html>

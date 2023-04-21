@@ -56,6 +56,7 @@ function encryptthismanual($data, $manualyKey) {
     echo '<div class="alert alert-danger role="alert"">
      No question number !
     </div>'; 
+    die();
   }
   $enciptedQuestionText = encryptthismanual($questionText ,$manualyKey );
   global  $insertQuesSQL_run;
@@ -86,6 +87,7 @@ if(empty($questionText)){
     echo '<div class="alert alert-danger role="alert"">
       Fields are empty !
     </div>'; 
+    die();
 }
 else if( $insertQuesSQL_run){
   foreach($studentIDArray as $StudentIndexNum)

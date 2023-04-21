@@ -934,13 +934,14 @@ if(mysqli_num_rows($sql_run) !== 0) {
        <label for="">Time Period (Minutes)</label>
        <input type="text" class="form-control my-2" placeholder="Time In Minutes" style="width: 58%; display: inline-flex;" id="timeInMinutes" required>
 
+       <label for="">Start Password</label>
+       <input type="text" class="form-control my-2" placeholder="This is used to start the exam" id="startPassword" required>
 
-       <label for="">Password</label>
-       <input type="text" class="form-control my-2" placeholder="This is used for end the exam" id="closesPassword" required>
+       <label for="">End Password</label>
+       <input type="text" class="form-control my-2" placeholder="This is used to end the exam" id="closesPassword" required>
 
 
-       <label for="">Password (Repeat)</label>
-       <input type="text" class="form-control my-2" placeholder="Repeat Password" id="repeatPassword" required>
+        
 
        <label for="">Limit to</label>
        <input type="number" class="form-control my-2" placeholder="Questions limit" id="limiteTo" min="1" max="50" required>
@@ -1077,12 +1078,20 @@ if(mysqli_num_rows($sql_run) !== 0) {
     });
   </script>
 
+<script type="text/javascript">
+window.onbeforeunload = function() {
+ 
+  return "Are you sure you want to leave this page?";
+
+}
+ 
+ </script>
 
 
    <script src="loadNumberOfQuestionsnew.js"></script> 
    
 
-   <script src="examPaperInfromation.js"></script> 
+   <script src="examPaperInfromation2.js"></script> 
    <script src="getStartButton_replace.js"></script> 
    <script src="startExam.js"></script> 
 <script src="removepaper.js"></script>
