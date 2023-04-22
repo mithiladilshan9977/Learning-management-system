@@ -20,7 +20,20 @@ $(document).ready(function () {
 
     if(seconds ==0){
       clearInterval(obj);
-      alert("dwadwd")
+ 
+ 
+     var ouertButtonHolder =  $(".ouertButtonHolder");
+     var whatisquestionbox =  $(".whatisquestionbox");
+     var optionsBox =  $(".optionsBox");
+     var examovertextshow =  $(".examovertextshow");
+
+ 
+     ouertButtonHolder.addClass("hideDives");
+     examovertextshow.removeClass("hideDives");
+     whatisquestionbox.addClass("hideDives");
+     optionsBox.addClass("hideDives");
+    
+ 
       
     }
    
@@ -28,10 +41,12 @@ $(document).ready(function () {
   
     let secondsreal = seconds % 60;
     const minuetseee = Math.floor(seconds/(60*addonehours));
-
+     
   var timmer = $(".timmer");
+  var showthetimmerdiv = $(".showthetimmer");
+       
  timmer.html(realhour +  ':' +  minuetseee + ':' +secondsreal );
-  
+ showthetimmerdiv.val(realhour +  ':' +  minuetseee + ':' +secondsreal );
  seconds--;
  
     

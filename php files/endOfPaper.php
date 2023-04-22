@@ -93,6 +93,9 @@ $selectQuestionnew_run = mysqli_query($conn, $selectQuestionnew);
    <label for="">Index Number    : </label> <p class=" " style=" display: inline-block; margin-left: 10px;"><?php echo $getdata['indexnumber']?></p>
 <br>
    <label for="">Correct Answers   : </label> <p class=" " style=" display: inline-block; margin-left: 10px;"><?php echo $numberofCorrectAnswers;?></p>
+   <br>
+   <label for="">Exam over at  : </label> <p class=" " style=" display: inline-block; margin-left: 10px;"><?php echo $_SESSION['EXAM_END_TIME'];?></p>
+
 
  <hr>
 

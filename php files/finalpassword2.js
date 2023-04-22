@@ -4,8 +4,10 @@ $(document).ready(function () {
         e.preventDefault();
 
         var thepassword = $("#passwordinput").val();
+        var endtime = $(".showthetimmer").val();
+
  
-        var data = "thepassword=" + thepassword;
+        var data = "thepassword=" + thepassword + "&endtime=" +endtime;
 
         $.ajax({
             type: "POST",  //默认get

@@ -20,6 +20,8 @@ if(!isset($_SESSION['studentID'])){
 
 
   $password = $_POST['thepassword'];
+  $_SESSION['EXAM_END_TIME'] = $_POST['endtime'];
+
 
 $selectExam = "SELECT * FROM examinformation WHERE examPaperID='{$examid}'";
 $selectExam_run = mysqli_query($conn, $selectExam);

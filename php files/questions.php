@@ -435,6 +435,30 @@ function encryptthismanual($data, $manualyKey) {
 .name{
    background-color: rgba(255, 0, 0, 0.122);
 }
+.hideDives{
+   display: none;
+}
+.examovertextshow{
+ 
+ 
+  display: fixed;
+  bottom:0px;
+  z-index: 200;
+  background-color: rgba(255, 0, 0, 0.171);
+  padding: 10px;
+ 
+}
+.examovertext{
+   color: red;
+   font-size: 30px;
+   text-align: center;
+   margin: 5px;
+ 
+}
+.nexttext{
+   font-size: 20px;
+   text-align: center;
+}
 </style> 
 <body class="body">
 <?php include("innerpreloader.php");?>
@@ -447,7 +471,7 @@ function encryptthismanual($data, $manualyKey) {
  
 
 <!-- //////////////////////////////////////////////////////////////////////////////// -->
-<div class="container maincontainerbox" style="width:70% ;   float: left; margin-left: 55px; top:-80px;position: relative;">
+<div class="container maincontainerbox  " style="width:70% ;   float: left; margin-left: 55px; top:-80px;position: relative;">
 <div class="modal-header mainheader">
 
          <img src="../images/camp.png" class="rounded float-start campImage"/>  
@@ -465,7 +489,13 @@ function encryptthismanual($data, $manualyKey) {
 
    </div>
 
-   <span class="addquestion"> </span>  
+   <span class="addquestion"> </span>
+
+   <div class="container examovertextshow  hideDives">
+   <p class="examovertext">Exam time is over</p>
+   <p class="nexttext">Now you can press <b>End paper button</b> and finish the exam</p>
+</div>
+
 <?php 
  
  
@@ -477,6 +507,7 @@ while($rows = mysqli_fetch_assoc($selectNotChangeQuestion_run))
     
 
      ?>
+     
        <div class="container whatisquestionbox">
         
           
@@ -581,6 +612,7 @@ while($rows = mysqli_fetch_assoc($selectNotChangeQuestion_run))
        
       </h6>
     <div class="timmer"> </div>
+    <input type="text" class="showthetimmer">
    
 </div>
  
@@ -623,14 +655,7 @@ $.ajax({
    
  </script>
 
- <script type="text/javascript">
-window.onbeforeunload = function() {
- 
-  return "Are you sure you want to leave this page?";
-
-}
- 
- </script>
+  
 
 
 <script type="text/javascript">
@@ -654,9 +679,9 @@ window.onbeforeunload = function() {
 
   <script src="vertical_question_form_replace.js"></script>
   <script src="getSingelQuestionSecond_replace.js"></script>
- <script src="finalpassword.js"></script>
+ <script src="finalpassword2.js"></script>
 <script src="detectTabNew.js"></script>
-<script src="timmer.js"></script>
+<script src="timmer2.js"></script>
 <script src="gobackwords.js"></script>
 <script src="studentAnswerNew.js"></script>
 
